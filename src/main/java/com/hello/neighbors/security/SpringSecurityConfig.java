@@ -34,8 +34,9 @@ public class SpringSecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Gestion des sessions
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/api/rest/security/**").permitAll()
-                    .requestMatchers("/api/rest/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers("/api/rest/hello/neighbors/security/**").permitAll()
+                    .requestMatchers("/api/rest/hello/neighbors/landing/**").permitAll()
+                    .requestMatchers("/api/rest/hello/neighbors/admin/**").hasAuthority("ADMIN")
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Ajout du filtre JWT
 

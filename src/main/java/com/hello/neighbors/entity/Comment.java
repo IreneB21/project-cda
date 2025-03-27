@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
 
@@ -15,8 +17,15 @@ public class Comment {
     private Long id;
     private String body;
     private LocalDateTime creationDate;
-    private Long authorId;
-    private Long publicationOrCommentId;
+
+    @ManyToOne
+    private Subscriber author;
+    @ManyToOne
+    private Publication publication;
+    @ManyToOne
+    @JoinColumn(name = "parent_comment_id")  // Spécifie la colonne de la clé étrangère
+    private Comment parentComment;  // Ce champ peut être null si ce n'est pas une réponse à un commentaire
+
     private boolean isModified;
     private boolean isReported;
 
@@ -26,14 +35,14 @@ public class Comment {
 
     public Comment(
             Long id, String body, LocalDateTime creationDate,
-            Long authorId, Long publicationOrCommentId,
-            boolean isModified, boolean isReported)
-    {
+            Subscriber author, Publication publication,
+            Comment parentComment, boolean isModified, boolean isReported) {
         this.id = id;
         this.body = body;
         this.creationDate = creationDate;
-        this.authorId = authorId;
-        this.publicationOrCommentId = publicationOrCommentId;
+        this.author = author;
+        this.publication = publication;
+        this.parentComment = parentComment;  // Permet d'ajouter un parent commentaire (peut être null)
         this.isModified = isModified;
         this.isReported = isReported;
     }
@@ -52,12 +61,16 @@ public class Comment {
         return creationDate;
     }
 
-    public Long getAuthorId() {
-        return authorId;
+    public Subscriber getAuthor() {
+        return author;
     }
 
-    public Long getPublicationOrCommentId() {
-        return publicationOrCommentId;
+    public Publication getPublication() {
+        return publication;
+    }
+
+    public Comment getParentComment() {
+        return parentComment;  // Getter pour accéder au commentaire parent
     }
 
     public boolean isModified() {
@@ -67,4 +80,19 @@ public class Comment {
     public boolean isReported() {
         return isReported;
     }
+
+    /////////////// Setters //////////////////
+
+    public void setAuthor(Subscriber author) {
+        this.author = author;
+    }
+
+    public void setPublication(Publication publication) {
+        this.publication = publication;
+    }
+
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;  // Setter pour définir un commentaire parent
+    }
+
 }

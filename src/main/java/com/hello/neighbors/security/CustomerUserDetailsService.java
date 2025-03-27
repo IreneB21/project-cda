@@ -1,6 +1,6 @@
 package com.hello.neighbors.security;
 
-import com.hello.neighbors.entity.UserRepository;
+import com.hello.neighbors.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,8 +15,8 @@ public class CustomerUserDetailsService implements UserDetailsService {
     ///////////// Méthodes ////////////
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return userRepository.findByLogin(login);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email);
     }
 
     ///////////// Setters ////////////

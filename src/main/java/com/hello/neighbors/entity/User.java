@@ -33,7 +33,6 @@ public abstract class User implements UserDetails {
     @JsonIgnore
     private String password;
     private String email;
-    private String picture;
     @ManyToMany(fetch = FetchType.EAGER  , cascade = CascadeType.MERGE)
     List<Role> roles;
 
@@ -44,7 +43,7 @@ public abstract class User implements UserDetails {
 
     public User(
             Long id, String lastname, String firstname, String pseudonym,
-            String password, String email, String picture, List<Role> roles)
+            String password, String email, List<Role> roles)
     {
         this.id = id;
         this.lastname = lastname;
@@ -52,7 +51,6 @@ public abstract class User implements UserDetails {
         this.pseudonym = pseudonym;
         this.password = password;
         this.email = email;
-        this.picture = picture;
         this.roles = roles;
     }
 
@@ -113,10 +111,6 @@ public abstract class User implements UserDetails {
         return pseudonym;
     }
 
-    public String getPicture() {
-        return picture;
-    }
-
     public List<Role> getRoles() {
         return roles;
     }
@@ -145,10 +139,6 @@ public abstract class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
     }
 
     public void setRoles(List<Role> roles) {

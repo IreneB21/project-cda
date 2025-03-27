@@ -33,12 +33,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     throws ServletException, IOException {
         String token = jwtUtilities.getToken(request) ;
         if (token != null && jwtUtilities.validateToken(token)) {
-            String login = jwtUtilities.extractUsername(token);
-            UserDetails userDetails = customerUserDetailsService.loadUserByUsername(login);
+            String email = jwtUtilities.extractUsername(token);
+            UserDetails userDetails = customerUserDetailsService.loadUserByUsername(email);
             if (userDetails != null) {
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername() ,null , userDetails.getAuthorities());
-                logger.info("Utilisateur authentifié avec l'identifiant : {}", login);
+                logger.info("Utilisateur authentifié avec l'identifiant : {}", email);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
