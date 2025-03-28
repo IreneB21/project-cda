@@ -8,13 +8,19 @@ import com.hello.neighbors.entity.dto.PublicationUpdateDto;
 import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.service.PublicationService;
 import jakarta.transaction.Transactional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PublicationServiceImpl implements PublicationService {
+
+    private static final Logger logger = LogManager.getLogger();
 
     private PublicationRepository publicationRepository;
 
@@ -66,7 +72,13 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public void delete(PublicationDeleteDto dto) {
+        logger.info("Publication ID passé: " + dto.getPublicationId());
 
+        Optional<Publication> publicationToDelete = publicationRepository.findById(dto.getPublicationId());
+        if (publicationToDelete.isEmpty()) {
+            logger.info("Publication non trouvée pour l'ID: " + dto.getPublicationId());
+        }
+        publicationRepository.deleteById(dto.getPublicationId());
     }
 
     @Autowired

@@ -38,7 +38,9 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 .requestMatchers("/api/rest/hello/neighbors/security/**").permitAll()
                 .requestMatchers("/api/rest/hello/neighbors/landing/**").permitAll()
-                .requestMatchers("/api/rest/hello/neighbors/publication/**").hasAuthority("USER")
+                .requestMatchers("/api/rest/hello/neighbors/publication/create").hasAuthority("USER")
+                .requestMatchers("/api/rest/hello/neighbors/publication/delete").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/publication/update").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/admin/**").hasAuthority("ADMIN");
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
