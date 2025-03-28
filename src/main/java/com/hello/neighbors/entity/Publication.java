@@ -29,6 +29,7 @@ public class Publication {
     private String street;
     private String description;
 
+    @JsonIgnore
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> illustrations;
 

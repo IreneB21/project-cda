@@ -34,6 +34,19 @@ public class Comment {
     public Comment() { }
 
     public Comment(
+            String body, LocalDateTime creationDate,
+            Subscriber author, Publication publication,
+            Comment parentComment, boolean isModified, boolean isReported) {
+        this.body = body;
+        this.creationDate = creationDate;
+        this.author = author;
+        this.publication = publication;
+        this.parentComment = parentComment;  // Permet d'ajouter un parent commentaire (peut être null)
+        this.isModified = isModified;
+        this.isReported = isReported;
+    }
+
+    public Comment(
             Long id, String body, LocalDateTime creationDate,
             Subscriber author, Publication publication,
             Comment parentComment, boolean isModified, boolean isReported) {
@@ -52,36 +65,41 @@ public class Comment {
     public Long getId() {
         return id;
     }
-
     public String getBody() {
         return body;
     }
-
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
-
     public Subscriber getAuthor() {
         return author;
     }
-
     public Publication getPublication() {
         return publication;
     }
-
     public Comment getParentComment() {
         return parentComment;  // Getter pour accéder au commentaire parent
     }
-
-    public boolean isModified() {
+    public boolean getModified() {
         return isModified;
     }
-
-    public boolean isReported() {
+    public boolean getReported() {
         return isReported;
     }
 
     /////////////// Setters //////////////////
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public void setAuthor(Subscriber author) {
         this.author = author;
@@ -92,7 +110,14 @@ public class Comment {
     }
 
     public void setParentComment(Comment parentComment) {
-        this.parentComment = parentComment;  // Setter pour définir un commentaire parent
+        this.parentComment = parentComment;
     }
 
+    public void setModified(boolean modified) {
+        isModified = modified;
+    }
+
+    public void setReported(boolean reported) {
+        isReported = reported;
+    }
 }

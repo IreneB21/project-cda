@@ -5,8 +5,10 @@ import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.dto.PublicationCreateDto;
 import com.hello.neighbors.entity.dto.PublicationDeleteDto;
 import com.hello.neighbors.entity.dto.PublicationUpdateDto;
+import com.hello.neighbors.entity.enums.PublicationCategory;
 import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.service.PublicationService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,23 +54,19 @@ public class PublicationServiceImpl implements PublicationService {
         Subscriber author = new Subscriber();
         author.setId(dto.getAuthorId());
 
-        Publication publication = new Publication(
-                dto.getPublicationId(),
-                dto.getTitle(),
-                dto.getCity(),
-                dto.getPostalCode(),
-                dto.getStreet(),
-                dto.getDescription(),
-                dto.getIllustrations(),
-                LocalDateTime.now(),
-                false,
-                false,
-                0,
-                author,
-                dto.getCategory()
-        );
+        Publication publication = publicationRepository.findById(dto.getPublicationId())
+                .orElseThrow(() -> new EntityNotFoundException("Publication non trouvée"));
+
+        publication.setTitle(dto.getTitle());
+        publication.setCity(dto.getCity());
+        publication.setPostalCode(dto.getPostalCode());
+        publication.setStreet(dto.getStreet());
+        publication.setDescription(dto.getDescription());
+        publication.setIllustrations(dto.getIllustrations());
+
         return publicationRepository.save(publication);
     }
+
 
     @Override
     public void delete(PublicationDeleteDto dto) {

@@ -1,5 +1,6 @@
 package com.hello.neighbors.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hello.neighbors.entity.enums.WithdrawalReason;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,8 +29,10 @@ public class Subscriber extends User {
     private WithdrawalReason withdrawalReason;
     private LocalDate lastActivityDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Comment> comments;
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Publication> publications;
 
