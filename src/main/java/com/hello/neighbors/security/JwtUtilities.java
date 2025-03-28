@@ -62,7 +62,7 @@ public class JwtUtilities {
     public String generateToken(String email , List<String> roles) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role",roles)
+                .claim("roles",roles)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(Date.from(Instant.now().plus(jwtExpiration, ChronoUnit.MILLIS)))
                 .signWith(SignatureAlgorithm.HS256, secret).compact();

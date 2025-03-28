@@ -4,8 +4,9 @@ import com.hello.neighbors.entity.enums.PublicationCategory;
 
 import java.util.List;
 
-public class PublicationCreateDto {
+public class PublicationUpdateDto {
 
+    private Long publicationId;
     private String title;
     private String city;
     private String postalCode;
@@ -19,8 +20,9 @@ public class PublicationCreateDto {
 
     @Override
     public String toString() {
-        return "PublicationCreateDto{" +
-                "title='" + title + '\'' +
+        return "PublicationUpdateDto{" +
+                "publicationId=" + publicationId +
+                ", title='" + title + '\'' +
                 ", city='" + city + '\'' +
                 ", postalCode='" + postalCode + '\'' +
                 ", street='" + street + '\'' +
@@ -33,6 +35,9 @@ public class PublicationCreateDto {
 
     ///////////// Getters and Setters ////////////////////
 
+    public Long getPublicationId() {
+        return publicationId;
+    }
     public String getTitle() {
         return title;
     }
@@ -58,6 +63,9 @@ public class PublicationCreateDto {
         return category;
     }
 
+    public void setPublicationId(Long publicationId) {
+        this.publicationId = publicationId;
+    }
     public void setTitle(String title) {
         this.title = title;
     }

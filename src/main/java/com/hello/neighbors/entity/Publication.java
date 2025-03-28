@@ -1,5 +1,6 @@
 package com.hello.neighbors.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hello.neighbors.entity.enums.PublicationCategory;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -38,6 +39,7 @@ public class Publication {
 
     @ManyToOne
     private Subscriber author;
+    @JsonIgnore
     @OneToMany(mappedBy = "publication")
     private List<Comment> comments;
 
@@ -51,6 +53,24 @@ public class Publication {
     public Publication(String title, String city, String postalCode, String street, String description,
                        List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
                        boolean isArchived, int likes, Subscriber author, PublicationCategory category) {
+        this.title = title;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.street = street;
+        this.description = description;
+        this.illustrations = illustrations;
+        this.publicationDate = publicationDate;
+        this.isReported = isReported;
+        this.isArchived = isArchived;
+        this.likes = likes;
+        this.author = author;
+        this.category =  category;
+    }
+
+    public Publication(Long id, String title, String city, String postalCode, String street, String description,
+                       List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
+                       boolean isArchived, int likes, Subscriber author, PublicationCategory category) {
+        this.id = id;
         this.title = title;
         this.city = city;
         this.postalCode = postalCode;

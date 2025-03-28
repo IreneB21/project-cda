@@ -32,14 +32,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain)
                                     throws ServletException, IOException {
         String token = jwtUtilities.getToken(request) ;
+        logger.info("Token JWT reçu : {}", token);
+
         if (token != null && jwtUtilities.validateToken(token)) {
+            logger.info("Token JWT validé avec succès.");
             String email = jwtUtilities.extractUsername(token);
+            logger.info("Nom d'utilisateur extrait du token : {}", email);
             UserDetails userDetails = customerUserDetailsService.loadUserByUsername(email);
+            logger.info("Utilisateur récupéré : {}", userDetails);
+
             if (userDetails != null) {
+                /// Créer un objet d'authentification et le mettre dans le SecurityContext
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername() ,null , userDetails.getAuthorities());
                 logger.info("Utilisateur authentifié avec l'identifiant : {}", email);
+                logger.info("Authorities récupérées : {}", userDetails.getAuthorities());
+                /// Mettre l'utilisateur dans le SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                logger.info("Utilisateur authentifié avec le rôle(s) (JwtAuthFilter) : {}", userDetails.getAuthorities());
             }
         }
         filterChain.doFilter(request,response);

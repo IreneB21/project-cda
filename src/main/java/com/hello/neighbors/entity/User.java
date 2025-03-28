@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToMany;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +26,8 @@ import java.util.List;
 @DiscriminatorColumn(name = "role_type")
 public abstract class User implements UserDetails {
 
+    private static final Logger logger = LogManager.getLogger();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +38,7 @@ public abstract class User implements UserDetails {
     private String password;
     private String email;
     @ManyToMany(fetch = FetchType.EAGER  , cascade = CascadeType.MERGE)
-    List<Role> roles;
+    List<Role> roles = new ArrayList<>();
 
     ////////////// Constructors ////////////////
 
@@ -51,7 +55,7 @@ public abstract class User implements UserDetails {
         this.pseudonym = pseudonym;
         this.password = password;
         this.email = email;
-        this.roles = roles;
+        this.roles = (roles == null) ? new ArrayList<>() : roles;
     }
 
     /////////////// Méthodes ////////////////
@@ -60,6 +64,9 @@ public abstract class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         this.roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
+
+        logger.info("Roles attribués à l'utilisateur (User.java) : {}", this.roles);
+
         return authorities;
     }
 
@@ -98,19 +105,15 @@ public abstract class User implements UserDetails {
     public Long getId() {
         return id;
     }
-
     public String getLastname() {
         return lastname;
     }
-
     public String getFirstname() {
         return firstname;
     }
-
     public String getPseudonym() {
         return pseudonym;
     }
-
     public List<Role> getRoles() {
         return roles;
     }
@@ -120,27 +123,21 @@ public abstract class User implements UserDetails {
     public void setId(Long id) {
         this.id = id;
     }
-
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
-
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
-
     public void setPseudonym(String pseudonym) {
         this.pseudonym = pseudonym;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
