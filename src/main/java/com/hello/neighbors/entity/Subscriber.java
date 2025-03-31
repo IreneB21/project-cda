@@ -5,6 +5,7 @@ import com.hello.neighbors.entity.enums.WithdrawalReason;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
@@ -32,9 +33,14 @@ public class Subscriber extends User {
     @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Comment> comments;
+
     @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Publication> publications;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "participants")
+    private List<Event> events;
 
     ///////////// Constructors ////////////////////
 
@@ -111,6 +117,7 @@ public class Subscriber extends User {
     }
     public List<Comment> getComments() { return comments; }
     public List<Publication> getPublications() { return publications; }
+    public List<Event> getEvents() { return events; }
 
     ///////////// Setters ////////////////////
 
@@ -158,4 +165,5 @@ public class Subscriber extends User {
     }
     public void setComments(List<Comment> comments) { this.comments = comments; }
     public void setPublications(List<Publication> publications) { this.publications = publications; }
+    public void setEvents(List<Event> events) { this.events = events; }
 }

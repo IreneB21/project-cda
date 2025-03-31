@@ -44,6 +44,10 @@ public class SpringSecurityConfig {
                 .requestMatchers("/api/rest/hello/neighbors/comment/publish").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/comment/delete").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/comment/update").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/event/create").hasAuthority("USER")
+                .requestMatchers("/api/rest/hello/neighbors/event/join").hasAuthority("USER")
+                .requestMatchers("/api/rest/hello/neighbors/event/cancel").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/event/update").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/admin/**").hasAuthority("ADMIN");
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

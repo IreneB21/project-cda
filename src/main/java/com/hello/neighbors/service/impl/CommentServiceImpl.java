@@ -9,13 +9,13 @@ import com.hello.neighbors.entity.dto.CommentUpdateDto;
 import com.hello.neighbors.repository.CommentRepository;
 import com.hello.neighbors.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -74,7 +74,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void delete(CommentDeleteDto dto) {
-
+        Optional<Comment> commentToDelete = commentRepository.findById(dto.getCommentId());
+        if (commentToDelete.isEmpty()) {
+            logger.info("Comment not find with ID " + dto.getCommentId());
+        }
+        commentRepository.deleteById(dto.getCommentId());
     }
 
     @Autowired

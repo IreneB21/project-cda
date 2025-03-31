@@ -1,0 +1,98 @@
+package com.hello.neighbors.service.impl;
+
+import com.hello.neighbors.entity.Event;
+import com.hello.neighbors.entity.Subscriber;
+import com.hello.neighbors.entity.dto.EventCancelDto;
+import com.hello.neighbors.entity.dto.EventCreateDto;
+import com.hello.neighbors.entity.dto.EventUpdateDto;
+import com.hello.neighbors.entity.dto.EventUpdateParticipantsDto;
+import com.hello.neighbors.repository.EventRepository;
+import com.hello.neighbors.repository.UserRepository;
+import com.hello.neighbors.service.EventService;
+import jakarta.persistence.EntityNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class EventServiceImpl implements EventService {
+
+    private static final Logger logger = LogManager.getLogger();
+
+    private EventRepository eventRepository;
+    private UserRepository userRepository;
+
+    @Override
+    public Event create(EventCreateDto dto) {
+        Subscriber author = new Subscriber();
+        author.setId(dto.getAuthorId());
+
+        Event event = new Event(
+                dto.getTitle(),
+                dto.getCity(),
+                dto.getPostalCode(),
+                dto.getStreet(),
+                dto.getStartDate(),
+                dto.getEndDate(),
+                dto.getDescription(),
+                dto.getIllustrations(),
+                author
+        );
+        return eventRepository.save(event);
+    }
+
+    @Override
+    public Event update(EventUpdateDto dto) {
+        Event existingEvent = eventRepository.findById(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+
+        existingEvent.setTitle(dto.getTitle());
+        existingEvent.setCity(dto.getCity());
+        existingEvent.setPostalCode(dto.getPostalCode());
+        existingEvent.setStreet(dto.getStreet());
+        existingEvent.setStartDate(dto.getStartDate());
+        existingEvent.setEndDate(dto.getEndDate());
+        existingEvent.setDescription(dto.getDescription());
+        existingEvent.setIllustrations(dto.getIllustrations());
+
+        return eventRepository.save(existingEvent);
+    }
+
+    @Override
+    public Event join(EventUpdateParticipantsDto dto) {
+        Event event = eventRepository.findById(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+
+        Subscriber newParticipant = (Subscriber) userRepository.findById(dto.getNewParticipantId())
+                .orElseThrow(() -> new EntityNotFoundException("Subscriber not found"));
+
+        event.getParticipants().add(newParticipant);
+        newParticipant.getEvents().add(event);
+
+        eventRepository.save(event);
+        userRepository.save(newParticipant);
+
+        return event;
+    }
+
+    @Override
+    public void cancel(EventCancelDto dto) {
+        Optional<Event> eventToCancel = eventRepository.findById(dto.getEventId());
+        if (eventToCancel.isEmpty()) {
+            logger.info("Event not find with ID :" + dto.getEventId());
+        }
+        eventRepository.deleteById(dto.getEventId());
+    }
+
+    @Autowired
+    public void setEventRepository(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+}
