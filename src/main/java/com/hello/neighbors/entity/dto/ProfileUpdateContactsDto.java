@@ -1,4 +1,4 @@
 package com.hello.neighbors.entity.dto;
 
-public class UpdateProfileDto {
+public class ProfileUpdateContactsDto {
 }

@@ -2,6 +2,7 @@ package com.hello.neighbors.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hello.neighbors.entity.enums.PublicationCategory;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,8 +41,9 @@ public class Publication {
 
     @ManyToOne
     private Subscriber author;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "publication")
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @Enumerated(EnumType.STRING)

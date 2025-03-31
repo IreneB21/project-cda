@@ -23,8 +23,8 @@ public class Comment {
     @ManyToOne
     private Publication publication;
     @ManyToOne
-    @JoinColumn(name = "parent_comment_id")  // Spécifie la colonne de la clé étrangère
-    private Comment parentComment;  // Ce champ peut être null si ce n'est pas une réponse à un commentaire
+    @JoinColumn(name = "parent_comment_id")
+    private Comment parentComment;
 
     private boolean isModified;
     private boolean isReported;

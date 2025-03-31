@@ -2,10 +2,10 @@ package com.hello.neighbors.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hello.neighbors.entity.enums.WithdrawalReason;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
@@ -31,15 +31,11 @@ public class Subscriber extends User {
     private LocalDate lastActivityDate;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "author")
-    private List<Comment> comments;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Publication> publications;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "participants")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Event> events;
 
     ///////////// Constructors ////////////////////
@@ -115,7 +111,6 @@ public class Subscriber extends User {
     public LocalDate getLastActivityDate() {
         return lastActivityDate;
     }
-    public List<Comment> getComments() { return comments; }
     public List<Publication> getPublications() { return publications; }
     public List<Event> getEvents() { return events; }
 
@@ -163,7 +158,6 @@ public class Subscriber extends User {
     public void setLastActivityDate(LocalDate lastActivityDate) {
         this.lastActivityDate = lastActivityDate;
     }
-    public void setComments(List<Comment> comments) { this.comments = comments; }
-    public void setPublications(List<Publication> publications) { this.publications = publications; }
-    public void setEvents(List<Event> events) { this.events = events; }
+    public void setPublications(Publication publication) { this.publications.add(publication); }
+    public void setEvents(Event event) { this.events.add(event); }
 }

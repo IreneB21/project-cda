@@ -45,6 +45,8 @@ public class PublicationServiceImpl implements PublicationService {
                 author,
                 dto.getCategory()
         );
+
+        author.setPublications(publication);
         return publicationRepository.save(publication);
     }
 
@@ -66,7 +68,6 @@ public class PublicationServiceImpl implements PublicationService {
 
         return publicationRepository.save(publication);
     }
-
 
     @Override
     public void delete(PublicationDeleteDto dto) {
