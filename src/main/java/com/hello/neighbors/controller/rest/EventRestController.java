@@ -43,8 +43,15 @@ public class EventRestController {
         return ResponseEntity.ok(event);
     }
 
+    @PutMapping("/leave")
+    public ResponseEntity<Event> leaveEvent(@RequestBody EventUpdateParticipantsDto dto) {
+        Event event = eventService.leave(dto);
+        return ResponseEntity.ok(event);
+    }
+
     @DeleteMapping("/cancel")
-    public void cancelEvent(@RequestBody EventCancelDto dto) { eventService.cancel(dto);
+    public void cancelEvent(@RequestBody EventCancelDto dto) {
+        eventService.cancel(dto);
     }
 
     @Autowired

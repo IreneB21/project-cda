@@ -10,7 +10,7 @@ public class EventUpdateParticipantsDto {
     public Long getId() {
         return id;
     }
-    public Long getNewParticipantId() {
+    public Long getParticipantId() {
         return newParticipantId;
     }
 

@@ -38,6 +38,7 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 .requestMatchers("/api/rest/hello/neighbors/security/**").permitAll()
                 .requestMatchers("/api/rest/hello/neighbors/landing/**").permitAll()
+                .requestMatchers("/api/rest/hello/neighbors/profile/update").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/publication/create").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/publication/delete").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/publication/update").hasAnyAuthority("USER", "ADMIN")
@@ -46,8 +47,12 @@ public class SpringSecurityConfig {
                 .requestMatchers("/api/rest/hello/neighbors/comment/update").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/event/create").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/event/join").hasAuthority("USER")
+                .requestMatchers("/api/rest/hello/neighbors/event/leave").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/event/cancel").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/event/update").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/notification/read").hasAuthority("USER")
+                .requestMatchers("/api/rest/hello/neighbors/notification/archive").hasAuthority("USER")
+                .requestMatchers("/api/rest/hello/neighbors/notification/delete").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/admin/**").hasAuthority("ADMIN");
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

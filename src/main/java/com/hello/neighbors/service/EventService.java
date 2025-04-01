@@ -11,5 +11,6 @@ public interface EventService {
     Event create(EventCreateDto dto);
     Event update(EventUpdateDto dto);
     Event join(EventUpdateParticipantsDto dto);
+    Event leave(EventUpdateParticipantsDto dto);
     void cancel(EventCancelDto dto);
 }

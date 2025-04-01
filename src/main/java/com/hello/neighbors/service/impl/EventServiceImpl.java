@@ -41,6 +41,8 @@ public class EventServiceImpl implements EventService {
                 dto.getIllustrations(),
                 author
         );
+
+        author.getEvents().add(event);
         return eventRepository.save(event);
     }
 
@@ -66,16 +68,27 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
-        Subscriber newParticipant = (Subscriber) userRepository.findById(dto.getNewParticipantId())
+        Subscriber newParticipant = (Subscriber) userRepository.findById(dto.getParticipantId())
                 .orElseThrow(() -> new EntityNotFoundException("Subscriber not found"));
 
         event.getParticipants().add(newParticipant);
-        newParticipant.getEvents().add(event);
+        return eventRepository.save(event);
+    }
 
-        eventRepository.save(event);
-        userRepository.save(newParticipant);
+    @Override
+    public Event leave(EventUpdateParticipantsDto dto) {
+        Event event = eventRepository.findById(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
-        return event;
+        Subscriber participantToRemove = (Subscriber) userRepository.findById(dto.getParticipantId())
+                .orElseThrow(() -> new EntityNotFoundException("Subscriber not found"));
+
+        if (!event.getParticipants().contains(participantToRemove)) {
+            throw new IllegalArgumentException("Participant is not part of this event");
+        }
+
+        event.getParticipants().remove(participantToRemove);
+        return eventRepository.save(event);
     }
 
     @Override
