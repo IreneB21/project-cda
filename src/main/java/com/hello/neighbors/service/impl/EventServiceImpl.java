@@ -5,6 +5,7 @@ import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.dto.EventCancelDto;
 import com.hello.neighbors.entity.dto.EventCreateDto;
 import com.hello.neighbors.entity.dto.EventUpdateDto;
+import com.hello.neighbors.entity.dto.EventUpdateLikesDto;
 import com.hello.neighbors.entity.dto.EventUpdateParticipantsDto;
 import com.hello.neighbors.repository.EventRepository;
 import com.hello.neighbors.repository.UserRepository;
@@ -42,7 +43,7 @@ public class EventServiceImpl implements EventService {
                 author
         );
 
-        author.getEvents().add(event);
+        //author.getEvents().add(event);
         return eventRepository.save(event);
     }
 
@@ -64,30 +65,33 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event join(EventUpdateParticipantsDto dto) {
-        Event event = eventRepository.findById(dto.getId())
+    public Event manageParticipation(EventUpdateParticipantsDto dto) {
+        Event event = eventRepository.findById(dto.getEventId())
                 .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
-        Subscriber newParticipant = (Subscriber) userRepository.findById(dto.getParticipantId())
+        Subscriber participant = (Subscriber) userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Subscriber not found"));
 
-        event.getParticipants().add(newParticipant);
+        if (dto.isJoin()) {
+            event.getParticipants().add(participant);
+        } else {
+            event.getParticipants().remove(participant);
+        }
+
         return eventRepository.save(event);
     }
 
     @Override
-    public Event leave(EventUpdateParticipantsDto dto) {
-        Event event = eventRepository.findById(dto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+    public Event manageLikes(EventUpdateLikesDto dto) {
+        Event event = eventRepository.findById(dto.getEventId())
+                .orElseThrow(() -> new RuntimeException("Event not found"));
 
-        Subscriber participantToRemove = (Subscriber) userRepository.findById(dto.getParticipantId())
-                .orElseThrow(() -> new EntityNotFoundException("Subscriber not found"));
-
-        if (!event.getParticipants().contains(participantToRemove)) {
-            throw new IllegalArgumentException("Participant is not part of this event");
+        if (dto.isAddLike()) {
+            event.getLikes().add(dto.getUserId());
+        } else {
+            event.getLikes().remove(dto.getUserId());
         }
 
-        event.getParticipants().remove(participantToRemove);
         return eventRepository.save(event);
     }
 

@@ -13,7 +13,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Event {
@@ -29,7 +31,10 @@ public class Event {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String description;
-    private int likes;
+
+    @JsonIgnore
+    @ElementCollection
+    private Set<Long> likes = new HashSet<>();
 
     @JsonIgnore
     @ElementCollection(fetch = FetchType.LAZY)
@@ -52,10 +57,12 @@ public class Event {
     public Event() {
     }
 
-    public Event(Long id, String title, String city, String postalCode, String street,
-                 LocalDateTime startDate, LocalDateTime endDate,
-                 String description, int likes, List<String> illustrations,
-                 Subscriber author, List<Subscriber> participants) {
+    public Event(
+            Long id, String title, String city, String postalCode, String street,
+            LocalDateTime startDate, LocalDateTime endDate, String description,
+            Set<Long> likes, List<String> illustrations, Subscriber author,
+            List<Subscriber> participants)
+    {
         this.id = id;
         this.title = title;
         this.city = city;
@@ -70,10 +77,12 @@ public class Event {
         this.participants = participants;
     }
 
-    public Event(String title, String city, String postalCode, String street,
+    public Event(
+            String title, String city, String postalCode, String street,
                  LocalDateTime startDate, LocalDateTime endDate,
                  String description, List<String> illustrations,
-                 Subscriber author) {
+                 Subscriber author
+    ) {
         this.title = title;
         this.city = city;
         this.postalCode = postalCode;
@@ -111,9 +120,7 @@ public class Event {
     public String getDescription() {
         return description;
     }
-    public int getLikes() {
-        return likes;
-    }
+    public Set<Long> getLikes() { return likes; }
     public List<String> getIllustrations() {
         return illustrations;
     }
@@ -148,9 +155,7 @@ public class Event {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
+    public void setLikes(Set<Long> likes) { this.likes = likes; }
     public void setIllustrations(List<String> illustrations) {
         this.illustrations = illustrations;
     }

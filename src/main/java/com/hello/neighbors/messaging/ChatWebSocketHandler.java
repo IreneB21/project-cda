@@ -11,7 +11,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/*
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private static final Logger logger = LogManager.getLogger();
@@ -62,3 +62,4 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         logger.info("Connection closed : " + session.getId());
     }
 }
+*/

@@ -2,22 +2,29 @@ package com.hello.neighbors.entity.dto;
 
 public class EventUpdateParticipantsDto {
 
-    private Long id;
-    private Long newParticipantId;
+    private Long eventId;
+    private Long userId;
+    private boolean join;
 
     ///////////// Getters and Setters ////////////////////
 
-    public Long getId() {
-        return id;
+    public Long getEventId() {
+        return eventId;
     }
-    public Long getParticipantId() {
-        return newParticipantId;
+    public Long getUserId() {
+        return userId;
+    }
+    public boolean isJoin() {
+        return join;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
-    public void setNewParticipantId(Long newParticipantId) {
-        this.newParticipantId = newParticipantId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    public void setJoin(boolean join) {
+        this.join = join;
     }
 }

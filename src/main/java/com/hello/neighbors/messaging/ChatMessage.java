@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
-
+/*
 @Entity
 public class ChatMessage {
 
@@ -60,3 +60,4 @@ public class ChatMessage {
         this.timestamp = timestamp;
     }
 }
+*/

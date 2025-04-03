@@ -2,23 +2,29 @@ package com.hello.neighbors.entity.dto;
 
 public class EventUpdateLikesDto {
 
-    private Long id;
-    private Long likes;
+    private Long eventId;
+    private Long userId;
+    private boolean addLike;
 
     ///////////// Getters and Setters ////////////////////
 
+    public Long getEventId() {
+        return eventId;
+    }
+    public Long getUserId() {
+        return userId;
+    }
+    public boolean isAddLike() {
+        return addLike;
+    }
 
-    public Long getId() {
-        return id;
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
-    public Long getLikes() {
-        return likes;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public void setLikes(Long likes) {
-        this.likes = likes;
+    public void setAddLike(boolean addLike) {
+        this.addLike = addLike;
     }
 }
