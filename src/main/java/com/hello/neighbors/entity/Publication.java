@@ -15,7 +15,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Publication {
@@ -37,7 +39,10 @@ public class Publication {
     private LocalDateTime publicationDate;
     private boolean isReported;
     private boolean isArchived;
-    private int likes;
+
+    @JsonIgnore
+    @ElementCollection
+    private Set<Long> likes = new HashSet<>();
 
     @ManyToOne
     private Subscriber author;
@@ -53,9 +58,11 @@ public class Publication {
 
     public Publication() { }
 
-    public Publication(String title, String city, String postalCode, String street, String description,
-                       List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
-                       boolean isArchived, int likes, Subscriber author, PublicationCategory category) {
+    public Publication(
+            String title, String city, String postalCode, String street, String description,
+            List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
+            boolean isArchived, Subscriber author, PublicationCategory category
+    ) {
         this.title = title;
         this.city = city;
         this.postalCode = postalCode;
@@ -65,14 +72,13 @@ public class Publication {
         this.publicationDate = publicationDate;
         this.isReported = isReported;
         this.isArchived = isArchived;
-        this.likes = likes;
         this.author = author;
         this.category =  category;
     }
 
     public Publication(Long id, String title, String city, String postalCode, String street, String description,
                        List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
-                       boolean isArchived, int likes, Subscriber author, PublicationCategory category) {
+                       boolean isArchived, Set<Long> likes, Subscriber author, PublicationCategory category) {
         this.id = id;
         this.title = title;
         this.city = city;
@@ -100,7 +106,7 @@ public class Publication {
     public LocalDateTime getPublicationDate() { return publicationDate; }
     public boolean isReported() { return isReported; }
     public boolean isArchived() { return isArchived; }
-    public int getLikes() { return likes; }
+    public Set<Long> getLikes() { return likes; }
     public Subscriber getAuthor() { return author; }
     public List<Comment> getComments() { return comments; }
     public PublicationCategory getCategory() { return category; }
@@ -114,8 +120,8 @@ public class Publication {
     public void setIllustrations(List<String> illustrations) { this.illustrations = illustrations; }
     public void setPublicationDate(LocalDateTime publicationDate) { this.publicationDate = publicationDate; }
     public void setReported(boolean reported) { isReported = reported; }
+    public void setLikes(Set<Long> likes) { this.likes = likes; }
     public void setArchived(boolean archived) { isArchived = archived; }
-    public void setLikes(int likes) { this.likes = likes; }
     public void setAuthor(Subscriber author) { this.author = author; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
     public void setCategory(PublicationCategory category) {

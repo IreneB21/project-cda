@@ -42,6 +42,8 @@ public class SpringSecurityConfig {
                 .requestMatchers("/api/rest/hello/neighbors/publication/create").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/publication/delete").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/publication/update").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/publication/like").hasAuthority("USER")
+                .requestMatchers("/api/rest/hello/neighbors/publication/dislike").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/comment/publish").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/comment/delete").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/comment/update").hasAnyAuthority("USER", "ADMIN")

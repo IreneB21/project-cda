@@ -5,7 +5,7 @@ import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.dto.PublicationCreateDto;
 import com.hello.neighbors.entity.dto.PublicationDeleteDto;
 import com.hello.neighbors.entity.dto.PublicationUpdateDto;
-import com.hello.neighbors.entity.enums.PublicationCategory;
+import com.hello.neighbors.entity.dto.PublicationUpdateLikesDto;
 import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.service.PublicationService;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,7 +40,6 @@ public class PublicationServiceImpl implements PublicationService {
                 LocalDateTime.now(),
                 false,
                 false,
-                0,
                 author,
                 dto.getCategory()
         );
@@ -57,7 +55,7 @@ public class PublicationServiceImpl implements PublicationService {
         author.setId(dto.getAuthorId());
 
         Publication publication = publicationRepository.findById(dto.getPublicationId())
-                .orElseThrow(() -> new EntityNotFoundException("Publication non trouvée"));
+                .orElseThrow(() -> new EntityNotFoundException("PPublication not found"));
 
         publication.setTitle(dto.getTitle());
         publication.setCity(dto.getCity());
@@ -65,6 +63,20 @@ public class PublicationServiceImpl implements PublicationService {
         publication.setStreet(dto.getStreet());
         publication.setDescription(dto.getDescription());
         publication.setIllustrations(dto.getIllustrations());
+
+        return publicationRepository.save(publication);
+    }
+
+    @Override
+    public Publication manageLikes(PublicationUpdateLikesDto dto) {
+        Publication publication = publicationRepository.findById(dto.getPublicationId())
+                .orElseThrow(() -> new RuntimeException("Publication not found"));
+
+        if (dto.isAddLike()) {
+            publication.getLikes().add(dto.getUserId());
+        } else {
+            publication.getLikes().remove(dto.getUserId());
+        }
 
         return publicationRepository.save(publication);
     }
