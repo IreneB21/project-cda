@@ -2,6 +2,7 @@ package com.hello.neighbors.service.impl;
 
 import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.User;
+import com.hello.neighbors.entity.dto.ProfileUpdateBioDto;
 import com.hello.neighbors.entity.dto.ProfileUpdateDto;
 import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.ProfileService;
@@ -9,7 +10,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProfileServiceImpl implements ProfileService {
 
     private UserRepository userRepository;
@@ -41,6 +44,19 @@ public class ProfileServiceImpl implements ProfileService {
 
             return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(existingUser));
         }
+    }
+
+    @Override
+    public User getUserInfos(long id) {
+        return userRepository.findUserById(id);
+    }
+
+    @Override
+    public ResponseEntity<Object> updateBio(ProfileUpdateBioDto dto) {
+        Subscriber existingUser = (Subscriber) userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        existingUser.setIntroduction(dto.getBody());
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(existingUser));;
     }
 
     ////////////////// Setters ////////////////

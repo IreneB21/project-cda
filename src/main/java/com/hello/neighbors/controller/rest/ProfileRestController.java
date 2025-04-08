@@ -1,10 +1,14 @@
 package com.hello.neighbors.controller.rest;
 
-import com.hello.neighbors.entity.Subscriber;
+import com.hello.neighbors.entity.User;
+import com.hello.neighbors.entity.dto.ProfileUpdateBioDto;
 import com.hello.neighbors.entity.dto.ProfileUpdateDto;
 import com.hello.neighbors.service.ProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +23,23 @@ public class ProfileRestController {
 
     //////////////// Endpoints ////////////////
 
+    @GetMapping("/user/{id}/infos")
+    public User getUserInfos(@PathVariable long id) {
+        return profileService.getUserInfos(id);
+    }
+
     @PutMapping("/update")
     public ResponseEntity<Object> updateProfile(@RequestBody ProfileUpdateDto dto) {
          return profileService.update(dto);
+    }
+
+    @PutMapping("/update/bio")
+    public ResponseEntity<Object> updateBio(@RequestBody ProfileUpdateBioDto dto) {
+        return profileService.updateBio(dto);
+    }
+
+    @Autowired
+    public void setProfileService(ProfileService profileService) {
+        this.profileService = profileService;
     }
 }

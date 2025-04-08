@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,7 +45,7 @@ public class PublicationServiceImpl implements PublicationService {
                 dto.getCategory()
         );
 
-        author.setPublications(publication);
+        //author.setPublications(publication);
         return publicationRepository.save(publication);
     }
 
@@ -90,6 +91,11 @@ public class PublicationServiceImpl implements PublicationService {
             logger.info("Publication non trouvée pour l'ID: " + dto.getPublicationId());
         }
         publicationRepository.deleteById(dto.getPublicationId());
+    }
+
+    @Override
+    public List<Publication> getUserPublications(long id) {
+        return publicationRepository.getByAuthorId(id);
     }
 
     @Autowired

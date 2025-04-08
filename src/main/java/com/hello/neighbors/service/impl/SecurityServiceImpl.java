@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +52,8 @@ public class SecurityServiceImpl implements SecurityService {
             subscriber.setStreet(registrationDto.getStreet());
             subscriber.setPostalCode(registrationDto.getPostalCode());
             subscriber.setIsInCity(registrationDto.getIsInCity());
+            subscriber.setPicture(registrationDto.getPicture());
+            subscriber.setRegistrationDate(LocalDate.now());
             Role role = roleRepository.findByRoleName(registrationDto.getRoleName());
             subscriber.setRoles(Collections.singletonList(role));
             userRepository.save(subscriber);
