@@ -2,7 +2,7 @@ package com.hello.neighbors.entity.dto;
 
 public class ProfileUpdateBioDto {
 
-    private Long UserId;
+    private Long userId;
     private String body;
 
     ///////////// Méthodes ////////////////////
@@ -10,7 +10,7 @@ public class ProfileUpdateBioDto {
     @Override
     public String toString() {
         return "ProfileUpdateBioDto{" +
-                "UserId=" + UserId +
+                "UserId=" + userId +
                 ", body='" + body + '\'' +
                 '}';
     }
@@ -18,14 +18,14 @@ public class ProfileUpdateBioDto {
     ///////////// Getters and Setters ////////////////////
 
     public Long getUserId() {
-        return UserId;
+        return userId;
     }
     public String getBody() {
         return body;
     }
 
     public void setUserId(Long userId) {
-        UserId = userId;
+        this.userId = userId;
     }
     public void setBody(String body) {
         this.body = body;

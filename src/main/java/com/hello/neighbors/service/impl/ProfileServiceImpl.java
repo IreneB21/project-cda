@@ -7,6 +7,8 @@ import com.hello.neighbors.entity.dto.ProfileUpdateDto;
 import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.ProfileService;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
+
+    private static final Logger logger = LogManager.getLogger();
 
     private UserRepository userRepository;
 
@@ -53,9 +57,11 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ResponseEntity<Object> updateBio(ProfileUpdateBioDto dto) {
+        logger.info("User ID : " + dto.getUserId());
         Subscriber existingUser = (Subscriber) userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         existingUser.setIntroduction(dto.getBody());
+        logger.info("Présentation : " + dto.getBody());
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(existingUser));
     }
 
