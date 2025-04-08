@@ -56,7 +56,7 @@ public class ProfileServiceImpl implements ProfileService {
         Subscriber existingUser = (Subscriber) userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         existingUser.setIntroduction(dto.getBody());
-        return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(existingUser));;
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(existingUser));
     }
 
     ////////////////// Setters ////////////////
