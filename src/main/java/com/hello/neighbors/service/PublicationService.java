@@ -16,4 +16,5 @@ public interface PublicationService {
     Publication manageLikes(PublicationUpdateLikesDto dto);
     void delete(PublicationDeleteDto dto);
     List<Publication> getUserPublications(long id);
+    List<Publication> fetchAll();
 }

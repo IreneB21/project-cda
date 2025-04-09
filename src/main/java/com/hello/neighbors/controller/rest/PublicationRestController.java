@@ -31,6 +31,11 @@ public class PublicationRestController {
 
     //////////////// Endpoints ////////////////
 
+    @GetMapping("/all/publications")
+    public List<Publication> getAllPublications() {
+        return publicationService.fetchAll();
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Publication> createPublication(@RequestBody PublicationCreateDto dto) {
         Publication publication = publicationService.create(dto);

@@ -98,6 +98,11 @@ public class PublicationServiceImpl implements PublicationService {
         return publicationRepository.getByAuthorId(id);
     }
 
+    @Override
+    public List<Publication> fetchAll() {
+        return publicationRepository.findAll();
+    }
+
     @Autowired
     public void setPublicationRepository(PublicationRepository publicationRepository) {
         this.publicationRepository = publicationRepository;

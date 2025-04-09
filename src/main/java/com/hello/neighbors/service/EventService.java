@@ -7,6 +7,8 @@ import com.hello.neighbors.entity.dto.EventUpdateDto;
 import com.hello.neighbors.entity.dto.EventUpdateLikesDto;
 import com.hello.neighbors.entity.dto.EventUpdateParticipantsDto;
 
+import java.util.List;
+
 public interface EventService {
 
     Event create(EventCreateDto dto);
@@ -14,4 +16,5 @@ public interface EventService {
     Event manageParticipation(EventUpdateParticipantsDto dto);
     Event manageLikes(EventUpdateLikesDto dto);
     void cancel(EventCancelDto dto);
+    List<Event> fetchAll();
 }

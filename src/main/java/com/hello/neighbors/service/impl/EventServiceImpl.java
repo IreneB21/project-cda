@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -102,6 +103,11 @@ public class EventServiceImpl implements EventService {
             logger.info("Event not find with ID :" + dto.getEventId());
         }
         eventRepository.deleteById(dto.getEventId());
+    }
+
+    @Override
+    public List<Event> fetchAll() {
+        return eventRepository.findAll();
     }
 
     @Autowired
