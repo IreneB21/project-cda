@@ -4,17 +4,19 @@ INSERT INTO role (id, role_name) VALUES (2, 'ADMIN');
 
 -- ========== USERS ==========
 -- Jean: password -> BCrypt
--- Marie: password -> BCrypt
+-- Marie: password -> BCrypt(idem pour les autres)
 INSERT INTO user (id, firstname, lastname, pseudonym, password, email, role_type) VALUES (1, 'Jean', 'Dupont', 'jdupont', '$2a$10$3Uo.DNjvC3ESvshZH.Gy8.3IK1G3dTzFV8AFzDCsk7M1lWhMQwCE6', 'jean.dupont@mail.com', 'Subscriber');
 INSERT INTO user (id, firstname, lastname, pseudonym, password, email, role_type) VALUES (2, 'Marie', 'Curie', 'mcurie', '$2a$10$3Uo.DNjvC3ESvshZH.Gy8.3IK1G3dTzFV8AFzDCsk7M1lWhMQwCE6', 'marie.curie@mail.com', 'Subscriber');
+INSERT INTO user (id, firstname, lastname, pseudonym, password, email, role_type) VALUES (2, 'Lola', 'Panzani', 'lolo', '$2a$10$3Uo.DNjvC3ESvshZH.Gy8.3IK1G3dTzFV8AFzDCsk7M1lWhMQwCE6', 'lp@mail.com', 'Subscriber');
 
 -- ========== USER_ROLES ==========
 INSERT INTO user_roles (user_id, roles_id) VALUES (1, 1);
 INSERT INTO user_roles (user_id, roles_id) VALUES (2, 1);
 
 -- ========== SUBSCRIBERS ==========
-INSERT INTO subscriber (id, city, postal_code, street, is_in_city, birthdate, introduction, phone, picture, notification_preferences, registration_date, withdrawal_date, withdrawal_reason, last_activity_date) VALUES (1, 'Paris', '75001', '1 rue de Rivoli', 1, '1990-01-01', 'Salut, moi c''est Jean !', '0601020304', 'https://picsum.photos/200', 0, '2024-01-01', NULL, NULL, '2025-04-08');
-INSERT INTO subscriber (id, city, postal_code, street, is_in_city, birthdate, introduction, phone, picture, notification_preferences, registration_date, withdrawal_date, withdrawal_reason, last_activity_date) VALUES (2, 'Suresnes', '92150', '12 avenue du Général', 0, '1985-12-12', 'Je suis Marie, ravie de vous rencontrer.', '0605060708', 'https://picsum.photos/201', 0, '2024-01-02', NULL, NULL, '2025-04-08');
+INSERT INTO subscriber (id, city, postal_code, street, is_in_city, birthdate, introduction, phone, picture, notification_preferences, registration_date, withdrawal_date, withdrawal_reason, last_activity_date) VALUES (1, 'Paris', '75001', '1 rue de Rivoli', 1, '1990-01-01', 'Salut, moi c''est Jean !', '0601020304', '/jean-picture.jpg', 0, '2024-01-01', NULL, NULL, '2025-04-08');
+INSERT INTO subscriber (id, city, postal_code, street, is_in_city, birthdate, introduction, phone, picture, notification_preferences, registration_date, withdrawal_date, withdrawal_reason, last_activity_date) VALUES (2, 'Suresnes', '92150', '12 avenue du Général', 0, '1985-12-12', 'Je suis Marie, ravie de vous rencontrer.', '0605060708', '/marie-picture.jpg', 0, '2024-01-02', NULL, NULL, '2025-04-08');
+INSERT INTO subscriber (id, city, postal_code, street, is_in_city, birthdate, introduction, phone, picture, notification_preferences, registration_date, withdrawal_date, withdrawal_reason, last_activity_date) VALUES (2, 'Clamart', '92140', '17 rue Saint-Christophe', 0, '1985-12-12', 'Hello, moi c''est Lola, hâte de partager de bons conseils et des adresses avec vous !.', '0605060708', '/lola-picture.jpg', 0, '2024-01-02', NULL, NULL, '2025-04-08');
 
 -- ========== PUBLICATIONS ==========
 INSERT INTO publication (id, title, city, postal_code, street, description, publication_date, is_reported, is_archived, author_id, category) VALUES (1, 'Marché local ce samedi', 'Lyon', '69003', 'Rue de la République', 'Venez nombreux au marché local, producteurs et animations.', '2024-04-05T10:00:00', false, false, 1, 'INFO');

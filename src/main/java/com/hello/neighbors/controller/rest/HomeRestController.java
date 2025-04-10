@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -19,8 +20,13 @@ public class HomeRestController {
     //////////////// Endpoints ////////////////
 
     @GetMapping("/display/all")
-    public List<Object> getAllPublicationsAndEvents() {
+    public HashMap<String, Object> getAllPublicationsAndEvents() {
         return homeService.getAllPublicationsAndEvents();
+    }
+
+    @GetMapping("/display/random/user/pictures")
+    public List<String> getRandomUserPictures() {
+        return homeService.getRandomPictures();
     }
 
     @Autowired
