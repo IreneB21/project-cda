@@ -31,8 +31,8 @@ public class HomeServiceImpl implements HomeService {
         HashMap<String, Object> allPosts = new HashMap<>();
         List<Publication> publications = publicationRepository.findAll();
         List<Event> events = eventRepository.findAll();
-        allPosts.put("Publications", publications);
-        allPosts.put("Events", events);
+        allPosts.put("publications", publications);
+        allPosts.put("events", events);
         return allPosts;
     }
 

@@ -10,7 +10,10 @@ import com.hello.neighbors.entity.dto.AuthenticationDto;
 import com.hello.neighbors.entity.dto.RegistrationDto;
 import com.hello.neighbors.entity.dto.UserDto;
 import com.hello.neighbors.security.JwtUtilities;
+import com.hello.neighbors.service.GeocodingService;
 import com.hello.neighbors.service.SecurityService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +28,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SecurityServiceImpl implements SecurityService {
+
+    private static final Logger logger = LogManager.getLogger();
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private AuthenticationManager authenticationManager;
     private PasswordEncoder passwordEncoder;
     private JwtUtilities jwtUtilities;
+    private GeocodingService geocodingService;
 
     ////////////////// Méthodes ////////////////
 
@@ -51,6 +58,17 @@ public class SecurityServiceImpl implements SecurityService {
             subscriber.setCity(registrationDto.getCity());
             subscriber.setStreet(registrationDto.getStreet());
             subscriber.setPostalCode(registrationDto.getPostalCode());
+
+            Optional<double[]> coordinates = geocodingService.geocodeAddress(
+                    registrationDto.getStreet(),
+                    registrationDto.getPostalCode(),
+                    registrationDto.getCity()
+            );
+            coordinates.ifPresent(coords -> {
+                subscriber.setLatitude(coords[0]);
+                subscriber.setLongitude(coords[1]);
+            });
+
             subscriber.setIsInCity(registrationDto.getIsInCity());
             subscriber.setPicture(registrationDto.getPicture());
             subscriber.setRegistrationDate(LocalDate.now());
@@ -100,5 +118,9 @@ public class SecurityServiceImpl implements SecurityService {
     @Autowired
     public void setJwtUtilities(JwtUtilities jwtUtilities) {
         this.jwtUtilities = jwtUtilities;
+    }
+    @Autowired
+    public void setGeocodingService(GeocodingService geocodingService) {
+        this.geocodingService = geocodingService;
     }
 }

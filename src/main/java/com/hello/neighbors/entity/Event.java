@@ -28,6 +28,8 @@ public class Event {
     private String city;
     private String postalCode;
     private String street;
+    private double latitude;
+    private double longitude;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String description;
@@ -59,6 +61,7 @@ public class Event {
 
     public Event(
             Long id, String title, String city, String postalCode, String street,
+            double latitude, double longitude,
             LocalDateTime startDate, LocalDateTime endDate, String description,
             Set<Long> likes, List<String> illustrations, Subscriber author,
             List<Subscriber> participants)
@@ -68,6 +71,8 @@ public class Event {
         this.city = city;
         this.postalCode = postalCode;
         this.street = street;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
@@ -79,14 +84,17 @@ public class Event {
 
     public Event(
             String title, String city, String postalCode, String street,
-                 LocalDateTime startDate, LocalDateTime endDate,
-                 String description, List<String> illustrations,
-                 Subscriber author
+            float latitude, float longitude,
+             LocalDateTime startDate, LocalDateTime endDate,
+             String description, List<String> illustrations,
+             Subscriber author
     ) {
         this.title = title;
         this.city = city;
         this.postalCode = postalCode;
         this.street = street;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
@@ -111,6 +119,8 @@ public class Event {
     public String getStreet() {
         return street;
     }
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
     public LocalDateTime getStartDate() {
         return startDate;
     }
@@ -146,6 +156,8 @@ public class Event {
     public void setStreet(String street) {
         this.street = street;
     }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }

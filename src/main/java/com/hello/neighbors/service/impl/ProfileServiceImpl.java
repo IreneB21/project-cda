@@ -5,6 +5,7 @@ import com.hello.neighbors.entity.User;
 import com.hello.neighbors.entity.dto.ProfileUpdateBioDto;
 import com.hello.neighbors.entity.dto.ProfileUpdateDto;
 import com.hello.neighbors.repository.UserRepository;
+import com.hello.neighbors.service.GeocodingService;
 import com.hello.neighbors.service.ProfileService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -14,12 +15,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ProfileServiceImpl implements ProfileService {
 
     private static final Logger logger = LogManager.getLogger();
 
     private UserRepository userRepository;
+    private GeocodingService geocodingService;
 
     ////////////////// Méthodes ////////////////
 
@@ -39,6 +43,17 @@ public class ProfileServiceImpl implements ProfileService {
             existingUser.setCity(dto.getCity());
             existingUser.setPostalCode(dto.getPostalCode());
             existingUser.setStreet(dto.getStreet());
+
+            Optional<double[]> coordinates = geocodingService.geocodeAddress(
+                    dto.getStreet(),
+                    dto.getPostalCode(),
+                    dto.getCity()
+            );
+            coordinates.ifPresent(coords -> {
+                existingUser.setLatitude(coords[0]);
+                existingUser.setLongitude(coords[1]);
+            });
+
             existingUser.setIsInCity(dto.isInCity());
             existingUser.setBirthdate(dto.getBirthdate());
             existingUser.setIntroduction(dto.getIntroduction());
@@ -70,5 +85,9 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+    @Autowired
+    public void setGeocodingService(GeocodingService geocodingService) {
+        this.geocodingService = geocodingService;
     }
 }

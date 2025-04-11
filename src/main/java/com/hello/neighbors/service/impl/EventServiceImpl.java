@@ -10,6 +10,7 @@ import com.hello.neighbors.entity.dto.EventUpdateParticipantsDto;
 import com.hello.neighbors.repository.EventRepository;
 import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.EventService;
+import com.hello.neighbors.service.GeocodingService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,23 +27,34 @@ public class EventServiceImpl implements EventService {
 
     private EventRepository eventRepository;
     private UserRepository userRepository;
+    private GeocodingService geocodingService;
 
     @Override
     public Event create(EventCreateDto dto) {
         Subscriber author = new Subscriber();
         author.setId(dto.getAuthorId());
+        Event event = new Event();
 
-        Event event = new Event(
-                dto.getTitle(),
-                dto.getCity(),
-                dto.getPostalCode(),
+        event.setTitle(dto.getTitle());
+        event.setCity(dto.getCity());
+        event.setPostalCode(dto.getPostalCode());
+        event.setStreet(dto.getStreet());
+
+        Optional<double[]> coordinates = geocodingService.geocodeAddress(
                 dto.getStreet(),
-                dto.getStartDate(),
-                dto.getEndDate(),
-                dto.getDescription(),
-                dto.getIllustrations(),
-                author
+                dto.getPostalCode(),
+                dto.getCity()
         );
+        coordinates.ifPresent(coords -> {
+            event.setLatitude(coords[0]);
+            event.setLongitude(coords[1]);
+        });
+
+        event.setStartDate(dto.getStartDate());
+        event.setEndDate(dto.getEndDate());
+        event.setDescription(dto.getDescription());
+        event.setIllustrations(dto.getIllustrations());
+        event.setAuthor(author);
 
         //author.getEvents().add(event);
         return eventRepository.save(event);
@@ -110,6 +122,8 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAll();
     }
 
+    ////////////////////// Setters ////////////////////////////
+
     @Autowired
     public void setEventRepository(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
@@ -117,5 +131,9 @@ public class EventServiceImpl implements EventService {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+    @Autowired
+    public void setGeocodingService(GeocodingService geocodingService) {
+        this.geocodingService = geocodingService;
     }
 }

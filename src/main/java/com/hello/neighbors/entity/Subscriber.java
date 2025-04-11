@@ -17,6 +17,8 @@ public class Subscriber extends User {
     private String city;
     private String postalCode;
     private String street;
+    private double latitude;
+    private double longitude;
     private boolean isInCity;
     private LocalDate birthdate;
     private String introduction;
@@ -44,7 +46,7 @@ public class Subscriber extends User {
 
     public Subscriber(
             String lastname, String firstname, String pseudonym, String password,
-            String email, List<Role> roles, String city,
+            String email, List<Role> roles, String city, double latitude, double longitude,
             String postalCode, String street, boolean isInCity, LocalDate birthdate, String introduction,
             String picture, String phone, int notificationPreferences, List<Long> contacts,
             LocalDate registrationDate, LocalDate withdrawalDate, WithdrawalReason withdrawalReason,
@@ -54,6 +56,8 @@ public class Subscriber extends User {
         this.city = city;
         this.postalCode = postalCode;
         this.street = street;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.isInCity = isInCity;
         this.birthdate = birthdate;
         this.introduction = introduction;
@@ -78,6 +82,8 @@ public class Subscriber extends User {
     public String getStreet() {
         return street;
     }
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
     public boolean getIsInCity() {
         return isInCity;
     }
@@ -125,6 +131,8 @@ public class Subscriber extends User {
     public void setStreet(String street) {
         this.street = street;
     }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
     public void setIsInCity(boolean isInCity) {
         this.isInCity = isInCity;
     }

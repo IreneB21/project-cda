@@ -30,6 +30,8 @@ public class Publication {
     private String city;
     private String postalCode;
     private String street;
+    private double latitude;
+    private double longitude;
     private String description;
 
     @JsonIgnore
@@ -59,14 +61,16 @@ public class Publication {
     public Publication() { }
 
     public Publication(
-            String title, String city, String postalCode, String street, String description,
-            List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
+            String title, String city, String postalCode, String street, double latitude, double longitude,
+            String description, List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
             boolean isArchived, Subscriber author, PublicationCategory category
     ) {
         this.title = title;
         this.city = city;
         this.postalCode = postalCode;
         this.street = street;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = description;
         this.illustrations = illustrations;
         this.publicationDate = publicationDate;
@@ -76,14 +80,18 @@ public class Publication {
         this.category =  category;
     }
 
-    public Publication(Long id, String title, String city, String postalCode, String street, String description,
-                       List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
-                       boolean isArchived, Set<Long> likes, Subscriber author, PublicationCategory category) {
+    public Publication(
+            Long id, String title, String city, String postalCode, String street, double latitude, double longitude,
+            String description, List<String> illustrations, LocalDateTime publicationDate, boolean isReported,
+            boolean isArchived, Set<Long> likes, Subscriber author, PublicationCategory category
+    ) {
         this.id = id;
         this.title = title;
         this.city = city;
         this.postalCode = postalCode;
         this.street = street;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = description;
         this.illustrations = illustrations;
         this.publicationDate = publicationDate;
@@ -101,6 +109,8 @@ public class Publication {
     public String getCity() { return city; }
     public String getPostalCode() { return postalCode; }
     public String getStreet() { return street; }
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
     public String getDescription() { return description; }
     public List<String> getIllustrations() { return illustrations; }
     public LocalDateTime getPublicationDate() { return publicationDate; }
@@ -116,6 +126,8 @@ public class Publication {
     public void setCity(String city) { this.city = city; }
     public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
     public void setStreet(String street) { this.street = street; }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
     public void setDescription(String description) { this.description = description; }
     public void setIllustrations(List<String> illustrations) { this.illustrations = illustrations; }
     public void setPublicationDate(LocalDateTime publicationDate) { this.publicationDate = publicationDate; }
