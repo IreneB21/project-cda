@@ -75,6 +75,9 @@ public class SecurityServiceImpl implements SecurityService {
             Role role = roleRepository.findByRoleName(registrationDto.getRoleName());
             subscriber.setRoles(Collections.singletonList(role));
             userRepository.save(subscriber);
+
+            System.out.println("New sub : " + subscriber);
+            System.out.println(subscriber);
             String token = jwtUtilities.generateToken(registrationDto.getEmail(), Collections.singletonList(role.getRoleName()));
             return ResponseEntity.status(HttpStatus.OK).body(new BearerToken(token , "Bearer "));
         }

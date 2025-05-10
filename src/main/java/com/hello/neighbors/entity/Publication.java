@@ -34,8 +34,7 @@ public class Publication {
     private double longitude;
     private String description;
 
-    @JsonIgnore
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> illustrations;
 
     private LocalDateTime publicationDate;
