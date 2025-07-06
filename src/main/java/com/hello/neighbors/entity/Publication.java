@@ -41,8 +41,7 @@ public class Publication {
     private boolean isReported;
     private boolean isArchived;
 
-    @JsonIgnore
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Long> likes = new HashSet<>();
 
     @ManyToOne

@@ -33,13 +33,12 @@ public class Event {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String description;
+    private LocalDateTime creationDate;
 
-    @JsonIgnore
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Long> likes = new HashSet<>();
 
-    @JsonIgnore
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> illustrations;
 
     @ManyToOne
@@ -86,8 +85,8 @@ public class Event {
             String title, String city, String postalCode, String street,
             float latitude, float longitude,
              LocalDateTime startDate, LocalDateTime endDate,
-             String description, List<String> illustrations,
-             Subscriber author
+             String description, LocalDateTime creationDate,
+            List<String> illustrations, Subscriber author
     ) {
         this.title = title;
         this.city = city;
@@ -98,6 +97,7 @@ public class Event {
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
+        this.creationDate = creationDate;
         this.illustrations = illustrations;
         this.author = author;
     }
@@ -129,6 +129,9 @@ public class Event {
     }
     public String getDescription() {
         return description;
+    }
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
     public Set<Long> getLikes() { return likes; }
     public List<String> getIllustrations() {
@@ -166,6 +169,9 @@ public class Event {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
     public void setLikes(Set<Long> likes) { this.likes = likes; }
     public void setIllustrations(List<String> illustrations) {

@@ -2,10 +2,7 @@ package com.hello.neighbors.controller.rest;
 
 import com.hello.neighbors.entity.Event;
 import com.hello.neighbors.entity.Publication;
-import com.hello.neighbors.entity.dto.PublicationCreateDto;
-import com.hello.neighbors.entity.dto.PublicationDeleteDto;
-import com.hello.neighbors.entity.dto.PublicationUpdateDto;
-import com.hello.neighbors.entity.dto.PublicationUpdateLikesDto;
+import com.hello.neighbors.entity.dto.*;
 import com.hello.neighbors.service.PublicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +29,7 @@ public class PublicationRestController {
     //////////////// Endpoints ////////////////
 
     @GetMapping("/all/publications")
-    public List<Publication> getAllPublications() {
+    public List<PublicationGetDto> getAllPublications() {
         return publicationService.fetchAll();
     }
 
@@ -49,19 +46,19 @@ public class PublicationRestController {
     }
 
     @PutMapping("/like")
-    public ResponseEntity<Publication> like(@RequestBody PublicationUpdateLikesDto dto) {
+    public ResponseEntity<PublicationDto> like(@RequestBody PublicationUpdateLikesDto dto) {
         Publication publication = publicationService.manageLikes(dto);
-        return ResponseEntity.ok(publication);
+        return ResponseEntity.ok(PublicationDto.from(publication));
     }
 
     @PutMapping("/dislike")
-    public ResponseEntity<Publication> dislike(@RequestBody PublicationUpdateLikesDto dto) {
+    public ResponseEntity<PublicationDto> dislike(@RequestBody PublicationUpdateLikesDto dto) {
         Publication publication = publicationService.manageLikes(dto);
-        return ResponseEntity.ok(publication);
+        return ResponseEntity.ok(PublicationDto.from(publication));
     }
 
     @GetMapping("/user/{id}/publications")
-    public List<Publication> getUserPublications(@PathVariable long id) {
+    public List<PublicationGetDto> getUserPublications(@PathVariable long id) {
         return publicationService.getUserPublications(id);
     }
 

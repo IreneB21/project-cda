@@ -1,22 +1,11 @@
 package com.hello.neighbors.controller.rest;
 
 import com.hello.neighbors.entity.Event;
-import com.hello.neighbors.entity.dto.EventCancelDto;
-import com.hello.neighbors.entity.dto.EventCreateDto;
-import com.hello.neighbors.entity.dto.EventUpdateDto;
-import com.hello.neighbors.entity.dto.EventUpdateLikesDto;
-import com.hello.neighbors.entity.dto.EventUpdateParticipantsDto;
+import com.hello.neighbors.entity.dto.*;
 import com.hello.neighbors.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +19,7 @@ public class EventRestController {
     //////////////// Endpoints ////////////////
 
     @GetMapping("/all/events")
-    public List<Event> getAllEvents() {
+    public List<EventGetDto> getAllEvents() {
         return eventService.fetchAll();
     }
 
@@ -47,27 +36,32 @@ public class EventRestController {
     }
 
     @PutMapping("/join")
-    public ResponseEntity<Event> join(@RequestBody EventUpdateParticipantsDto dto) {
+    public ResponseEntity<EventDto> join(@RequestBody EventUpdateParticipantsDto dto) {
         Event event = eventService.manageParticipation(dto);
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(EventDto.from(event));
     }
 
     @PutMapping("/leave")
-    public ResponseEntity<Event> leave(@RequestBody EventUpdateParticipantsDto dto) {
+    public ResponseEntity<EventDto> leave(@RequestBody EventUpdateParticipantsDto dto) {
         Event event = eventService.manageParticipation(dto);
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(EventDto.from(event));
     }
 
     @PutMapping("/like")
-    public ResponseEntity<Event> like(@RequestBody EventUpdateLikesDto dto) {
+    public ResponseEntity<EventDto> like(@RequestBody EventUpdateLikesDto dto) {
         Event event = eventService.manageLikes(dto);
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(EventDto.from(event));
     }
 
     @PutMapping("/dislike")
-    public ResponseEntity<Event> dislike(@RequestBody EventUpdateLikesDto dto) {
+    public ResponseEntity<EventDto> dislike(@RequestBody EventUpdateLikesDto dto) {
         Event event = eventService.manageLikes(dto);
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(EventDto.from(event));
+    }
+
+    @GetMapping("/user/{id}/events")
+    public List<EventGetDto> getUserEvents(@PathVariable long id) {
+        return eventService.getUserEvents(id);
     }
 
     @DeleteMapping("/cancel")

@@ -2,10 +2,7 @@ package com.hello.neighbors.service.impl;
 
 import com.hello.neighbors.entity.Publication;
 import com.hello.neighbors.entity.Subscriber;
-import com.hello.neighbors.entity.dto.PublicationCreateDto;
-import com.hello.neighbors.entity.dto.PublicationDeleteDto;
-import com.hello.neighbors.entity.dto.PublicationUpdateDto;
-import com.hello.neighbors.entity.dto.PublicationUpdateLikesDto;
+import com.hello.neighbors.entity.dto.*;
 import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.service.GeocodingService;
 import com.hello.neighbors.service.PublicationService;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PublicationServiceImpl implements PublicationService {
@@ -91,7 +89,9 @@ public class PublicationServiceImpl implements PublicationService {
             publication.getLikes().remove(dto.getUserId());
         }
 
-        return publicationRepository.save(publication);
+        publication.getLikes().size();
+
+        return publication;
     }
 
     @Override
@@ -106,13 +106,50 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-    public List<Publication> getUserPublications(long id) {
-        return publicationRepository.getByAuthorId(id);
+    public List<PublicationGetDto> getUserPublications(long id) {
+        List<Publication> publications = publicationRepository.getByAuthorId(id);
+
+        return publications.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Publication> fetchAll() {
-        return publicationRepository.findAll();
+    public List<PublicationGetDto> fetchAll() {
+        List<Publication> publications = publicationRepository.findAll();
+
+        return publications.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    private PublicationGetDto mapToDto(Publication pub) {
+        PublicationGetDto dto = new PublicationGetDto();
+
+        dto.setId(pub.getId());
+        dto.setTitle(pub.getTitle());
+        dto.setCategory(pub.getCategory());
+        dto.setCity(pub.getCity());
+        dto.setPostalCode(pub.getPostalCode());
+        dto.setStreet(pub.getStreet());
+        dto.setLatitude(pub.getLatitude());
+        dto.setLongitude(pub.getLongitude());
+        dto.setDescription(pub.getDescription());
+        dto.setIllustrations(pub.getIllustrations());
+        dto.setLikes(pub.getLikes());
+        dto.setPublicationDate(pub.getPublicationDate());
+
+        Subscriber author = pub.getAuthor();
+        PublicationAuthorDto authorDto = new PublicationAuthorDto(
+                author.getId(),
+                author.getFirstname(),
+                author.getLastname(),
+                author.getPseudonym(),
+                author.getPicture()
+        );
+        dto.setAuthor(authorDto);
+
+        return dto;
     }
 
     ////////////////////// Setters ////////////////////////////

@@ -2,23 +2,22 @@ package com.hello.neighbors.service.impl;
 
 import com.hello.neighbors.entity.Event;
 import com.hello.neighbors.entity.Subscriber;
-import com.hello.neighbors.entity.dto.EventCancelDto;
-import com.hello.neighbors.entity.dto.EventCreateDto;
-import com.hello.neighbors.entity.dto.EventUpdateDto;
-import com.hello.neighbors.entity.dto.EventUpdateLikesDto;
-import com.hello.neighbors.entity.dto.EventUpdateParticipantsDto;
+import com.hello.neighbors.entity.dto.*;
 import com.hello.neighbors.repository.EventRepository;
 import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.EventService;
 import com.hello.neighbors.service.GeocodingService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -53,6 +52,7 @@ public class EventServiceImpl implements EventService {
         event.setStartDate(dto.getStartDate());
         event.setEndDate(dto.getEndDate());
         event.setDescription(dto.getDescription());
+        event.setCreationDate(LocalDateTime.now());
         event.setIllustrations(dto.getIllustrations());
         event.setAuthor(author);
 
@@ -77,6 +77,7 @@ public class EventServiceImpl implements EventService {
         return eventRepository.save(existingEvent);
     }
 
+    @Transactional
     @Override
     public Event manageParticipation(EventUpdateParticipantsDto dto) {
         Event event = eventRepository.findById(dto.getEventId())
@@ -91,9 +92,12 @@ public class EventServiceImpl implements EventService {
             event.getParticipants().remove(participant);
         }
 
-        return eventRepository.save(event);
+        event.getParticipants().size();
+
+        return event;
     }
 
+    @Transactional
     @Override
     public Event manageLikes(EventUpdateLikesDto dto) {
         Event event = eventRepository.findById(dto.getEventId())
@@ -105,7 +109,9 @@ public class EventServiceImpl implements EventService {
             event.getLikes().remove(dto.getUserId());
         }
 
-        return eventRepository.save(event);
+        event.getLikes().size();
+
+        return event;
     }
 
     @Override
@@ -118,8 +124,69 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> fetchAll() {
-        return eventRepository.findAll();
+    public List<EventGetDto> getUserEvents(long id) {
+        List<Event> events = eventRepository.getByAuthorId(id);
+
+        return events.stream()
+                .map(event -> {
+                    List<EventParticipantDto> participants = event.getParticipants().stream()
+                            .map(sub -> new EventParticipantDto(
+                                    sub.getId(),
+                                    sub.getFirstname(),
+                                    sub.getLastname()))
+                            .collect(Collectors.toList());
+
+                    return mapToDto(event, participants);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EventGetDto> fetchAll() {
+        List<Event> events = eventRepository.findAll();
+
+        return events.stream()
+                .map(event -> {
+                    List<EventParticipantDto> participants = event.getParticipants().stream()
+                            .map(sub -> new EventParticipantDto(
+                                    sub.getId(),
+                                    sub.getFirstname(),
+                                    sub.getLastname()))
+                            .collect(Collectors.toList());
+
+                    return mapToDto(event, participants);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private EventGetDto mapToDto(Event ev, List<EventParticipantDto> participants) {
+        EventGetDto dto = new EventGetDto();
+
+        dto.setId(ev.getId());
+        dto.setTitle(ev.getTitle());
+        dto.setCity(ev.getCity());
+        dto.setPostalCode(ev.getPostalCode());
+        dto.setStreet(ev.getStreet());
+        dto.setLatitude(ev.getLatitude());
+        dto.setLongitude(ev.getLongitude());
+        dto.setStartDate(ev.getStartDate());
+        dto.setEndDate(ev.getEndDate());
+        dto.setDescription(ev.getDescription());
+        dto.setIllustrations(ev.getIllustrations());
+        dto.setCreationDate(ev.getCreationDate());
+        dto.setParticipants(participants);
+
+        Subscriber author = ev.getAuthor();
+        EventAuthorDto authorDto = new EventAuthorDto(
+                author.getId(),
+                author.getFirstname(),
+                author.getLastname(),
+                author.getPseudonym(),
+                author.getPicture()
+        );
+        dto.setAuthor(authorDto);
+
+        return dto;
     }
 
     ////////////////////// Setters ////////////////////////////
