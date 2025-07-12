@@ -2,13 +2,10 @@ package com.hello.neighbors.controller.rest;
 
 import com.hello.neighbors.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/rest/hello/neighbors/home")
@@ -20,8 +17,16 @@ public class HomeRestController {
     //////////////// Endpoints ////////////////
 
     @GetMapping("/display/all")
-    public HashMap<String, Object> getAllPublicationsAndEvents() {
+    public Map<String, List<?>> getAllPublicationsAndEvents() {
         return homeService.getAllPublicationsAndEvents();
+    }
+
+    @GetMapping("/display/all/nearby")
+    public Map<String, List<?>> getNearbyPublicationsAndEvents(
+            @RequestParam double lat,
+            @RequestParam double lng,
+            @RequestParam double radiusKm) {
+        return homeService.getNearbyPublicationsAndEvents(lat, lng, radiusKm);
     }
 
     @GetMapping("/display/random/user/pictures")

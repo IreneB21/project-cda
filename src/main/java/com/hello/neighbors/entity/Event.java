@@ -1,16 +1,7 @@
 package com.hello.neighbors.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -33,6 +24,7 @@ public class Event {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String description;
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
     @ElementCollection(fetch = FetchType.EAGER)

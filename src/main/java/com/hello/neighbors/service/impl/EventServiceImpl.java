@@ -125,7 +125,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventGetDto> getUserEvents(long id) {
-        List<Event> events = eventRepository.getByAuthorId(id);
+        List<Event> events = eventRepository.findEventsWithParticipantsAndAuthorByAuthorId(id);
 
         return events.stream()
                 .map(event -> {
@@ -159,7 +159,7 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
-    private EventGetDto mapToDto(Event ev, List<EventParticipantDto> participants) {
+    public EventGetDto mapToDto(Event ev, List<EventParticipantDto> participants) {
         EventGetDto dto = new EventGetDto();
 
         dto.setId(ev.getId());

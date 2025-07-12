@@ -1,24 +1,22 @@
 package com.hello.neighbors.entity.dto;
 
-import java.time.LocalDateTime;
-
-public class CommentCreateDto {
+public class CommentGetDto {
 
     private String body;
     private Long authorId;
     private Long publicationId;
     private Long parentCommentId;
 
-    ///////////// Methods ////////////////////
+    ////////////// Constructors ////////////////
 
-    @Override
-    public String toString() {
-        return "CommentCreateDto{" +
-                "body='" + body + '\'' +
-                ", authorId=" + authorId +
-                ", publicationId=" + publicationId +
-                ", parentCommentId=" + parentCommentId +
-                '}';
+    public CommentGetDto() {
+    }
+
+    public CommentGetDto(String body, Long authorId, Long publicationId, Long parentCommentId) {
+        this.body = body;
+        this.authorId = authorId;
+        this.publicationId = publicationId;
+        this.parentCommentId = parentCommentId;
     }
 
     ///////////// Getters and Setters ////////////////////
@@ -35,6 +33,7 @@ public class CommentCreateDto {
     public Long getParentCommentId() {
         return parentCommentId;
     }
+
     public void setBody(String body) {
         this.body = body;
     }

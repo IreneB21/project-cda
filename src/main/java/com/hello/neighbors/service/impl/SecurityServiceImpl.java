@@ -96,7 +96,21 @@ public class SecurityServiceImpl implements SecurityService {
         List<String> rolesNames = new ArrayList<>();
         user.getRoles().forEach(role-> rolesNames.add(role.getRoleName()));
         String token = jwtUtilities.generateToken(user.getUsername(),rolesNames);
-        UserDto userDto = new UserDto(user.getId(), user.getFirstname(), user.getLastname(), token);
+
+        String latitude = null;
+        String longitude = null;
+        if (user instanceof Subscriber subscriber) {
+            latitude = String.valueOf(subscriber.getLatitude());
+            longitude = String.valueOf(subscriber.getLongitude());
+        }
+        UserDto userDto = new UserDto(
+                user.getId(),
+                user.getFirstname(),
+                user.getLastname(),
+                token,
+                latitude,
+                longitude
+        );
         return ResponseEntity.ok(userDto);
     }
 

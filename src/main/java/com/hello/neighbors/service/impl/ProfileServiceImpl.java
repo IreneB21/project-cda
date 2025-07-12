@@ -1,9 +1,12 @@
 package com.hello.neighbors.service.impl;
 
+import com.hello.neighbors.entity.Event;
+import com.hello.neighbors.entity.Publication;
 import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.User;
-import com.hello.neighbors.entity.dto.ProfileUpdateBioDto;
-import com.hello.neighbors.entity.dto.ProfileUpdateDto;
+import com.hello.neighbors.entity.dto.*;
+import com.hello.neighbors.repository.EventRepository;
+import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.GeocodingService;
 import com.hello.neighbors.service.ProfileService;
@@ -15,7 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -24,6 +28,10 @@ public class ProfileServiceImpl implements ProfileService {
 
     private UserRepository userRepository;
     private GeocodingService geocodingService;
+    private PublicationRepository publicationRepository;
+    private EventRepository eventRepository;
+    private EventServiceImpl eventService;
+    private PublicationServiceImpl publicationService;
 
     ////////////////// Méthodes ////////////////
 
@@ -80,6 +88,40 @@ public class ProfileServiceImpl implements ProfileService {
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(existingUser));
     }
 
+    @Override
+    public UserGetForVisitorDto getUserInfosForVisitor(long id) {
+        return userRepository.getUserInfosForVisitor(id);
+    }
+
+    @Override
+    public Map<String, List<?>> getUserPosts(long userId) {
+        List<PublicationGetDto> publications = publicationRepository
+                .findPublicationsWithAuthorByAuthorId(userId)
+                .stream()
+                .map(publicationService::mapToDto)
+                .collect(Collectors.toList());
+
+        List<EventGetDto> events = eventRepository
+                .findEventsWithParticipantsAndAuthorByAuthorId(userId)
+                .stream()
+                .map(event -> {
+                    List<EventParticipantDto> participants = event.getParticipants().stream()
+                            .map(sub -> new EventParticipantDto(
+                                    sub.getId(),
+                                    sub.getFirstname(),
+                                    sub.getLastname()))
+                            .collect(Collectors.toList());
+
+                    return this.eventService.mapToDto(event, participants);
+                })
+                .collect(Collectors.toList());
+
+        Map<String, List<?>> result = new HashMap<>();
+        result.put("publications", publications);
+        result.put("events", events);
+        return result;
+    }
+
     ////////////////// Setters ////////////////
 
     @Autowired
@@ -89,5 +131,21 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     public void setGeocodingService(GeocodingService geocodingService) {
         this.geocodingService = geocodingService;
+    }
+    @Autowired
+    public void setPublicationRepository(PublicationRepository publicationRepository) {
+        this.publicationRepository = publicationRepository;
+    }
+    @Autowired
+    public void setEventRepository(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+    @Autowired
+    public void setEventService(EventServiceImpl eventService) {
+        this.eventService = eventService;
+    }
+    @Autowired
+    public void setPublicationService(PublicationServiceImpl publicationService) {
+        this.publicationService = publicationService;
     }
 }

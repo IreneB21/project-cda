@@ -5,6 +5,7 @@ import com.hello.neighbors.entity.Publication;
 import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.dto.CommentCreateDto;
 import com.hello.neighbors.entity.dto.CommentDeleteDto;
+import com.hello.neighbors.entity.dto.CommentGetDto;
 import com.hello.neighbors.entity.dto.CommentUpdateDto;
 import com.hello.neighbors.repository.CommentRepository;
 import com.hello.neighbors.service.CommentService;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,6 +81,12 @@ public class CommentServiceImpl implements CommentService {
             logger.info("Comment not find with ID " + dto.getCommentId());
         }
         commentRepository.deleteById(dto.getCommentId());
+    }
+
+    @Override
+    public List<CommentGetDto> getAssociatedComments(long postId) {
+        List<CommentGetDto> comments = commentRepository.findByPublicationId(postId);
+        return comments;
     }
 
     @Autowired

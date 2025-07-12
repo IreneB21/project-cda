@@ -107,7 +107,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public List<PublicationGetDto> getUserPublications(long id) {
-        List<Publication> publications = publicationRepository.getByAuthorId(id);
+        List<Publication> publications = publicationRepository.findPublicationsWithAuthorByAuthorId(id);
 
         return publications.stream()
                 .map(this::mapToDto)
@@ -123,7 +123,7 @@ public class PublicationServiceImpl implements PublicationService {
                 .collect(Collectors.toList());
     }
 
-    private PublicationGetDto mapToDto(Publication pub) {
+    public PublicationGetDto mapToDto(Publication pub) {
         PublicationGetDto dto = new PublicationGetDto();
 
         dto.setId(pub.getId());

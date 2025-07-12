@@ -3,6 +3,7 @@ package com.hello.neighbors.controller.rest;
 import com.hello.neighbors.entity.User;
 import com.hello.neighbors.entity.dto.ProfileUpdateBioDto;
 import com.hello.neighbors.entity.dto.ProfileUpdateDto;
+import com.hello.neighbors.entity.dto.UserGetForVisitorDto;
 import com.hello.neighbors.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/rest/hello/neighbors/profile")
@@ -26,6 +30,16 @@ public class ProfileRestController {
     @GetMapping("/user/{id}/infos")
     public User getUserInfos(@PathVariable long id) {
         return profileService.getUserInfos(id);
+    }
+
+    @GetMapping("/user/{id}/infos/visitor")
+    public UserGetForVisitorDto getUserInfosForVisitor(@PathVariable long id) {
+        return profileService.getUserInfosForVisitor(id);
+    }
+
+    @GetMapping("/user/{id}/posts")
+    public Map<String, List<?>> getUserPosts(@PathVariable long id) {
+        return profileService.getUserPosts(id);
     }
 
     @PutMapping("/update")

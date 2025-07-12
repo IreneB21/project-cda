@@ -53,6 +53,8 @@ public class SpringSecurityConfig {
                 .requestMatchers("/api/rest/hello/neighbors/profile/update").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/profile/update/bio").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/profile/user/{id}/infos").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/profile/user/{id}/infos/visitor").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/profile/user/{id}/posts").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/publication/create").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/publication/delete").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/publication/update").hasAnyAuthority("USER", "ADMIN")
@@ -76,6 +78,7 @@ public class SpringSecurityConfig {
                 .requestMatchers("/api/rest/hello/neighbors/notification/delete").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/home/display/all").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/home/display/all/nearby").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/home/display/random/user/pictures").hasAnyAuthority("USER", "ADMIN");
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
