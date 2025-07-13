@@ -6,8 +6,13 @@ public class GeocodingResponseDto {
     private String lon;
     private String display_name;
 
-    public GeocodingResponseDto() {
-        // constructeur par défaut requis pour Jackson
+    public GeocodingResponseDto() {}
+
+    public GeocodingResponseDto(String place_id, String lat, String lon, String display_name) {
+        this.display_name = display_name;
+        this.lat = lat;
+        this.lon = lon;
+        this.place_id = place_id;
     }
 
     public String getPlace_id() {
