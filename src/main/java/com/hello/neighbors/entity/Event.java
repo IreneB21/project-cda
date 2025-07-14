@@ -37,6 +37,9 @@ public class Event {
     private Subscriber author;
 
     @JsonIgnore
+    private List<CommentEvent> comments;
+
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "event_participants",
@@ -132,6 +135,9 @@ public class Event {
     public Subscriber getAuthor() {
         return author;
     }
+    public List<CommentEvent> getComments() {
+        return comments;
+    }
     public List<Subscriber> getParticipants() {
         return participants;
     }
@@ -171,6 +177,9 @@ public class Event {
     }
     public void setAuthor(Subscriber author) {
         this.author = author;
+    }
+    public void setComments(List<CommentEvent> comments) {
+        this.comments = comments;
     }
     public void setParticipants(List<Subscriber> participants) {
         this.participants = participants;

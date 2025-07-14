@@ -1,13 +1,12 @@
 package com.hello.neighbors.service.impl;
 
-import com.hello.neighbors.entity.Comment;
-import com.hello.neighbors.entity.Publication;
-import com.hello.neighbors.entity.Subscriber;
+import com.hello.neighbors.entity.*;
 import com.hello.neighbors.entity.dto.CommentCreateDto;
 import com.hello.neighbors.entity.dto.CommentDeleteDto;
 import com.hello.neighbors.entity.dto.CommentGetDto;
 import com.hello.neighbors.entity.dto.CommentUpdateDto;
-import com.hello.neighbors.repository.CommentRepository;
+import com.hello.neighbors.repository.CommentEventRepository;
+import com.hello.neighbors.repository.CommentPublicationRepository;
 import com.hello.neighbors.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -24,32 +23,33 @@ public class CommentServiceImpl implements CommentService {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private CommentRepository commentRepository;
+    private CommentPublicationRepository commentPublicationRepository;
+    private CommentEventRepository commentEventRepository;
 
     @Override
-    public Comment create(CommentCreateDto dto) {
+    public CommentPublication createPublicationComment(CommentCreateDto dto) {
 
-        if (dto.getPublicationId() == null && dto.getParentCommentId() == null) {
+        if (dto.getParentId() == null && dto.getParentCommentId() == null) {
             throw new IllegalArgumentException("Un commentaire doit être rattaché à une publication ou à un autre commentaire.");
         }
-        if (dto.getPublicationId() != null && dto.getParentCommentId() != null) {
+        if (dto.getParentId() != null && dto.getParentCommentId() != null) {
             throw new IllegalArgumentException("Un commentaire ne peut pas être rattaché à la fois à une publication et à un autre commentaire.");
         }
 
         Subscriber author = new Subscriber();
         author.setId(dto.getAuthorId());
         Publication publication = null;
-        if (dto.getPublicationId() != null) {
+        if (dto.getParentId() != null) {
             publication = new Publication();
-            publication.setId(dto.getPublicationId());
+            publication.setId(dto.getParentId());
         }
-        Comment parentComment = null;
+        CommentPublication parentComment = null;
         if (dto.getParentCommentId() != null) {
-            parentComment = new Comment();
+            parentComment = new CommentPublication();
             parentComment.setId(dto.getParentCommentId());
         }
 
-        Comment comment = new Comment(
+        CommentPublication comment = new CommentPublication(
                 dto.getBody(),
                 LocalDateTime.now(),
                 author,
@@ -59,38 +59,84 @@ public class CommentServiceImpl implements CommentService {
                 false
         );
 
-        return commentRepository.save(comment);
+        return commentPublicationRepository.save(comment);
     }
 
     @Override
-    public Comment update(CommentUpdateDto dto) {
+    public CommentEvent createEventComment(CommentCreateDto dto) {
 
-        Comment existingComment = commentRepository.findById(dto.getId())
+        if (dto.getParentId() == null && dto.getParentCommentId() == null) {
+            throw new IllegalArgumentException("Un commentaire doit être rattaché à une publication ou à un autre commentaire.");
+        }
+        if (dto.getParentId() != null && dto.getParentCommentId() != null) {
+            throw new IllegalArgumentException("Un commentaire ne peut pas être rattaché à la fois à une publication et à un autre commentaire.");
+        }
+
+        Subscriber author = new Subscriber();
+        author.setId(dto.getAuthorId());
+        Event event = null;
+        if (dto.getParentId() != null) {
+            event = new Event();
+            event.setId(dto.getParentId());
+        }
+        CommentEvent parentComment = null;
+        if (dto.getParentCommentId() != null) {
+            parentComment = new CommentEvent();
+            parentComment.setId(dto.getParentCommentId());
+        }
+
+        CommentEvent comment = new CommentEvent(
+                dto.getBody(),
+                LocalDateTime.now(),
+                author,
+                event,
+                parentComment,
+                false,
+                false
+        );
+
+        return commentEventRepository.save(comment);
+    }
+
+    @Override
+    public CommentPublication update(CommentUpdateDto dto) {
+
+        CommentPublication existingComment = commentPublicationRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
 
         existingComment.setBody(dto.getBody());
         existingComment.setModified(true);
 
-        return commentRepository.save(existingComment);
+        return commentPublicationRepository.save(existingComment);
     }
 
     @Override
     public void delete(CommentDeleteDto dto) {
-        Optional<Comment> commentToDelete = commentRepository.findById(dto.getCommentId());
+        Optional<CommentPublication> commentToDelete = commentPublicationRepository.findById(dto.getCommentId());
         if (commentToDelete.isEmpty()) {
             logger.info("Comment not find with ID " + dto.getCommentId());
         }
-        commentRepository.deleteById(dto.getCommentId());
+        commentPublicationRepository.deleteById(dto.getCommentId());
     }
 
     @Override
-    public List<CommentGetDto> getAssociatedComments(long postId) {
-        List<CommentGetDto> comments = commentRepository.findByPublicationId(postId);
+    public List<CommentGetDto> getPublicationAssociatedComments(long postId) {
+        List<CommentGetDto> comments = commentPublicationRepository.findByPublicationId(postId);
+        return comments;
+    }
+
+    @Override
+    public List<CommentGetDto> getEventAssociatedComments(long postId) {
+        List<CommentGetDto> comments = commentEventRepository.findByEventId(postId);
         return comments;
     }
 
     @Autowired
-    public void setCommentRepository(CommentRepository commentRepository) {
-        this.commentRepository = commentRepository;
+    public void setCommentPublicationRepository(CommentPublicationRepository commentPublicationRepository) {
+        this.commentPublicationRepository = commentPublicationRepository;
+    }
+    @Autowired
+    public void setCommentEventRepository(CommentEventRepository commentEventRepository) {
+        this.commentEventRepository = commentEventRepository;
     }
 }

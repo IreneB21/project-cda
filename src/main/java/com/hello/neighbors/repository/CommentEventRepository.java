@@ -1,12 +1,12 @@
 package com.hello.neighbors.repository;
 
-import com.hello.neighbors.entity.Comment;
+import com.hello.neighbors.entity.CommentEvent;
 import com.hello.neighbors.entity.dto.CommentGetDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentEventRepository extends JpaRepository<CommentEvent, Long> {
 
-    List<CommentGetDto> findByPublicationId(long postId);
+    List<CommentGetDto> findByEventId(long postId);
 }

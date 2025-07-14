@@ -2,9 +2,10 @@ package com.hello.neighbors.entity.dto;
 
 public class CommentGetDto {
 
+    private Long id;
     private String body;
     private Long authorId;
-    private Long publicationId;
+    private Long parentId;
     private Long parentCommentId;
 
     ////////////// Constructors ////////////////
@@ -12,36 +13,45 @@ public class CommentGetDto {
     public CommentGetDto() {
     }
 
-    public CommentGetDto(String body, Long authorId, Long publicationId, Long parentCommentId) {
+    public CommentGetDto(Long id, String body, Long authorId, Long parentId, Long parentCommentId) {
+        this.id = id;
         this.body = body;
         this.authorId = authorId;
-        this.publicationId = publicationId;
+        this.parentId = parentId;
         this.parentCommentId = parentCommentId;
     }
 
+
+
     ///////////// Getters and Setters ////////////////////
 
+    public Long getId() {
+        return id;
+    }
     public String getBody() {
         return body;
     }
     public Long getAuthorId() {
         return authorId;
     }
-    public Long getPublicationId() {
-        return publicationId;
+    public Long getParentId() {
+        return parentId;
     }
     public Long getParentCommentId() {
         return parentCommentId;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
     public void setBody(String body) {
         this.body = body;
     }
     public void setAuthorId(Long authorId) {
         this.authorId = authorId;
     }
-    public void setPublicationId(Long publicationId) {
-        this.publicationId = publicationId;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
     public void setParentCommentId(Long parentCommentId) {
         this.parentCommentId = parentCommentId;

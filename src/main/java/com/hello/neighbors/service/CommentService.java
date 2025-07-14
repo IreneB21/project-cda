@@ -1,6 +1,7 @@
 package com.hello.neighbors.service;
 
-import com.hello.neighbors.entity.Comment;
+import com.hello.neighbors.entity.CommentEvent;
+import com.hello.neighbors.entity.CommentPublication;
 import com.hello.neighbors.entity.dto.CommentCreateDto;
 import com.hello.neighbors.entity.dto.CommentDeleteDto;
 import com.hello.neighbors.entity.dto.CommentGetDto;
@@ -10,8 +11,10 @@ import java.util.List;
 
 public interface CommentService {
 
-    Comment create(CommentCreateDto dto);
-    Comment update(CommentUpdateDto dto);
+    CommentPublication update(CommentUpdateDto dto);
     void delete(CommentDeleteDto dto);
-    List<CommentGetDto> getAssociatedComments(long postId);
+    List<CommentGetDto> getPublicationAssociatedComments(long postId);
+    List<CommentGetDto> getEventAssociatedComments(long postId);
+    CommentPublication createPublicationComment(CommentCreateDto dto);
+    CommentEvent createEventComment(CommentCreateDto dto);
 }

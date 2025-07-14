@@ -2,7 +2,6 @@ package com.hello.neighbors.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hello.neighbors.entity.enums.PublicationCategory;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -48,8 +46,7 @@ public class Publication {
     private Subscriber author;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    private List<CommentPublication> comments;
 
     @Enumerated(EnumType.STRING)
     PublicationCategory category;
@@ -116,7 +113,7 @@ public class Publication {
     public boolean isArchived() { return isArchived; }
     public Set<Long> getLikes() { return likes; }
     public Subscriber getAuthor() { return author; }
-    public List<Comment> getComments() { return comments; }
+    public List<CommentPublication> getComments() { return comments; }
     public PublicationCategory getCategory() { return category; }
 
     public void setId(Long id) { this.id = id; }
@@ -133,7 +130,7 @@ public class Publication {
     public void setLikes(Set<Long> likes) { this.likes = likes; }
     public void setArchived(boolean archived) { isArchived = archived; }
     public void setAuthor(Subscriber author) { this.author = author; }
-    public void setComments(List<Comment> comments) { this.comments = comments; }
+    public void setComments(List<CommentPublication> comments) { this.comments = comments; }
     public void setCategory(PublicationCategory category) {
         this.category = category;
     }

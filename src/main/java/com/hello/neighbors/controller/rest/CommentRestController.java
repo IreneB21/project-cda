@@ -1,7 +1,7 @@
 package com.hello.neighbors.controller.rest;
 
-import com.hello.neighbors.entity.Comment;
-import com.hello.neighbors.entity.Publication;
+import com.hello.neighbors.entity.CommentEvent;
+import com.hello.neighbors.entity.CommentPublication;
 import com.hello.neighbors.entity.dto.CommentCreateDto;
 import com.hello.neighbors.entity.dto.CommentDeleteDto;
 import com.hello.neighbors.entity.dto.CommentGetDto;
@@ -22,15 +22,21 @@ public class CommentRestController {
 
     //////////////// Endpoints ////////////////
 
-    @PostMapping("/publish")
-    public ResponseEntity<Comment> publishComment(@RequestBody CommentCreateDto dto) {
-        Comment comment = commentService.create(dto);
+    @PostMapping("/post/publication/comment")
+    public ResponseEntity<CommentPublication> postPublicationComment(@RequestBody CommentCreateDto dto) {
+        CommentPublication comment = commentService.createPublicationComment(dto);
+        return ResponseEntity.ok(comment);
+    }
+
+    @PostMapping("/post/event/comment")
+    public ResponseEntity<CommentEvent> postEventComment(@RequestBody CommentCreateDto dto) {
+        CommentEvent comment = commentService.createEventComment(dto);
         return ResponseEntity.ok(comment);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Comment> updateComment(@RequestBody CommentUpdateDto dto) {
-        Comment comment = commentService.update(dto);
+    public ResponseEntity<CommentPublication> updateComment(@RequestBody CommentUpdateDto dto) {
+        CommentPublication comment = commentService.update(dto);
         return ResponseEntity.ok(comment);
     }
 
@@ -39,9 +45,14 @@ public class CommentRestController {
         commentService.delete(dto);
     }
 
-    @GetMapping("{id}/associated/comments")
-    public List<CommentGetDto> getAssociatedComments(@PathVariable long postId) {
-        return commentService.getAssociatedComments(postId);
+    @GetMapping("/publication/{id}/associated/comments")
+    public List<CommentGetDto> getPublicationAssociatedComments(@PathVariable long postId) {
+        return commentService.getPublicationAssociatedComments(postId);
+    }
+
+    @GetMapping("/event/{id}/associated/comments")
+    public List<CommentGetDto> getEventAssociatedComments(@PathVariable long postId) {
+        return commentService.getEventAssociatedComments(postId);
     }
 
     @Autowired
