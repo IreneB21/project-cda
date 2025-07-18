@@ -12,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -48,6 +47,7 @@ public class SpringSecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                .requestMatchers("/test").permitAll()
                 .requestMatchers("/api/rest/hello/neighbors/security/**").permitAll()
                 .requestMatchers("/api/rest/hello/neighbors/landing/**").permitAll()
                 .requestMatchers("/api/rest/hello/neighbors/profile/update").hasAuthority("USER")
