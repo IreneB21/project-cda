@@ -56,7 +56,6 @@ public class EventServiceImpl implements EventService {
         event.setIllustrations(dto.getIllustrations());
         event.setAuthor(author);
 
-        //author.getEvents().add(event);
         return eventRepository.save(event);
     }
 

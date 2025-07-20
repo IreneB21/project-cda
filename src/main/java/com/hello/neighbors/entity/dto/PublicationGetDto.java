@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-public class PublicationGetDto {
+public class PublicationGetDto implements PostDto {
     private Long id;
     private String title;
     private PublicationCategory category;

@@ -46,13 +46,13 @@ public class CommentRestController {
     }
 
     @GetMapping("/publication/{id}/associated/comments")
-    public List<CommentGetDto> getPublicationAssociatedComments(@PathVariable long postId) {
-        return commentService.getPublicationAssociatedComments(postId);
+    public List<CommentGetDto> getPublicationAssociatedComments(@PathVariable long id) {
+        return commentService.getPublicationAssociatedComments(id);
     }
 
     @GetMapping("/event/{id}/associated/comments")
-    public List<CommentGetDto> getEventAssociatedComments(@PathVariable long postId) {
-        return commentService.getEventAssociatedComments(postId);
+    public List<CommentGetDto> getEventAssociatedComments(@PathVariable long id) {
+        return commentService.getEventAssociatedComments(id);
     }
 
     @Autowired

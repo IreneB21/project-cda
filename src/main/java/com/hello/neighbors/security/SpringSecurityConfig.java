@@ -35,7 +35,7 @@ public class SpringSecurityConfig {
         http.cors().configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of("http://localhost:4200"));
-                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true);
                     return config;
@@ -82,7 +82,7 @@ public class SpringSecurityConfig {
                 .requestMatchers("/api/rest/hello/neighbors/notification/delete").hasAuthority("USER")
                 .requestMatchers("/api/rest/hello/neighbors/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/home/display/all").hasAnyAuthority("USER", "ADMIN")
-                .requestMatchers("/api/rest/hello/neighbors/home/display/all/nearby").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/home/display/all/nearby/{userId}").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/home/display/random/user/pictures").hasAnyAuthority("USER", "ADMIN");
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

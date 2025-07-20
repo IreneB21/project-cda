@@ -61,12 +61,9 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional
-    public Publication update(PublicationUpdateDto dto) {
-        Subscriber author = new Subscriber();
-        author.setId(dto.getAuthorId());
-
-        Publication publication = publicationRepository.findById(dto.getPublicationId())
-                .orElseThrow(() -> new EntityNotFoundException("PPublication not found"));
+    public PublicationGetDto update(PublicationUpdateDto dto) {
+    Publication publication = publicationRepository.findById(dto.getPublicationId())
+                .orElseThrow(() -> new EntityNotFoundException("Publication not found"));
 
         publication.setTitle(dto.getTitle());
         publication.setCity(dto.getCity());
@@ -75,7 +72,21 @@ public class PublicationServiceImpl implements PublicationService {
         publication.setDescription(dto.getDescription());
         publication.setIllustrations(dto.getIllustrations());
 
-        return publicationRepository.save(publication);
+        Optional<double[]> coordinates = geocodingService.geocodeAddress(
+                dto.getStreet(),
+                dto.getPostalCode(),
+                dto.getCity()
+        );
+        coordinates.ifPresent(coords -> {
+            publication.setLatitude(coords[0]);
+            publication.setLongitude(coords[1]);
+        });
+
+        publicationRepository.save(publication);
+
+        PublicationGetDto updatedPublication = this.mapToDto(publication);
+
+        return updatedPublication;
     }
 
     @Override

@@ -16,14 +16,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEventsWithParticipantsAndAuthorByAuthorId(@Param("authorId") long authorId);
 
     @Query(value = """
-        SELECT p.* FROM publication p
+        SELECT e.* FROM Event e
         WHERE (6371 * acos(
-            cos(radians(:lat)) * cos(radians(p.latitude)) *
-            cos(radians(p.longitude) - radians(:lng)) +
-            sin(radians(:lat)) * sin(radians(p.latitude))
+            cos(radians(:lat)) * cos(radians(e.latitude)) *
+            cos(radians(e.longitude) - radians(:lng)) +
+            sin(radians(:lat)) * sin(radians(e.latitude))
         )) <= :radiusKm
         """, nativeQuery = true)
     List<Event> findAllWithinRadius(@Param("lat") double lat,
-                                          @Param("lng") double lng,
-                                          @Param("radiusKm") double radiusKm);
+                                    @Param("lng") double lng,
+                                    @Param("radiusKm") double radiusKm);
 }

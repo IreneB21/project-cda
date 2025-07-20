@@ -15,7 +15,7 @@ public interface PublicationRepository extends JpaRepository<Publication, Long> 
     List<Publication> findPublicationsWithAuthorByAuthorId(@Param("authorId") long authorId);
 
     @Query(value = """
-        SELECT p.* FROM publication p
+        SELECT p.* FROM Publication p
         WHERE (6371 * acos(
             cos(radians(:lat)) * cos(radians(p.latitude)) *
             cos(radians(p.longitude) - radians(:lng)) +

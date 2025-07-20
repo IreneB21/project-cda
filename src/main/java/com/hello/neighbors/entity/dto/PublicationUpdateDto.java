@@ -13,8 +13,6 @@ public class PublicationUpdateDto {
     private String street;
     private String description;
     private List<String> illustrations;
-    private Long authorId;
-    PublicationCategory category;
 
     ///////////// Méthodes ////////////////////
 
@@ -28,8 +26,6 @@ public class PublicationUpdateDto {
                 ", street='" + street + '\'' +
                 ", description='" + description + '\'' +
                 ", illustrations=" + illustrations +
-                ", authorId=" + authorId +
-                ", category=" + category +
                 '}';
     }
 
@@ -56,12 +52,6 @@ public class PublicationUpdateDto {
     public List<String> getIllustrations() {
         return illustrations;
     }
-    public Long getAuthorId() {
-        return authorId;
-    }
-    public PublicationCategory getCategory() {
-        return category;
-    }
 
     public void setPublicationId(Long publicationId) {
         this.publicationId = publicationId;
@@ -83,11 +73,5 @@ public class PublicationUpdateDto {
     }
     public void setIllustrations(List<String> illustrations) {
         this.illustrations = illustrations;
-    }
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
-    }
-    public void setCategory(PublicationCategory category) {
-        this.category = category;
     }
 }

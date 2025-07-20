@@ -9,7 +9,7 @@ import java.util.List;
 public interface PublicationService {
 
     Publication create(PublicationCreateDto dto);
-    Publication update(PublicationUpdateDto dto);
+    PublicationGetDto update(PublicationUpdateDto dto);
     Publication manageLikes(PublicationUpdateLikesDto dto);
     void delete(PublicationDeleteDto dto);
     List<PublicationGetDto> getUserPublications(long id);

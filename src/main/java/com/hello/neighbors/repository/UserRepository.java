@@ -2,6 +2,7 @@ package com.hello.neighbors.repository;
 
 import com.hello.neighbors.entity.User;
 import com.hello.neighbors.entity.dto.UserGetForVisitorDto;
+import com.hello.neighbors.entity.dto.UserLocationInfoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "s.id, s.lastname, s.firstname, s.pseudonym, s.introduction, s.picture, s.registrationDate) " +
             "FROM Subscriber s WHERE s.id = :id")
     UserGetForVisitorDto getUserInfosForVisitor(@Param("id") long id);
+
+    @Query("SELECT s.latitude AS latitude, s.longitude AS longitude, s.isInCity AS isInCity FROM Subscriber s WHERE s.id = :userId")
+    UserLocationInfoDto findLocationInfoById(@Param("userId") Long userId);
 }

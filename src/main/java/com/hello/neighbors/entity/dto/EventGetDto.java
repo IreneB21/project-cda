@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-public class EventGetDto {
+public class EventGetDto implements PostDto {
     private Long id;
     private String title;
     private String city;

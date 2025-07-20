@@ -1,10 +1,7 @@
 package com.hello.neighbors.service.impl;
 
-import com.hello.neighbors.entity.Event;
 import com.hello.neighbors.entity.Publication;
-import com.hello.neighbors.entity.dto.EventGetDto;
-import com.hello.neighbors.entity.dto.EventParticipantDto;
-import com.hello.neighbors.entity.dto.PublicationGetDto;
+import com.hello.neighbors.entity.dto.*;
 import com.hello.neighbors.repository.EventRepository;
 import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.repository.UserRepository;
@@ -12,6 +9,7 @@ import com.hello.neighbors.service.HomeService;
 import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,12 +63,24 @@ public class HomeServiceImpl implements HomeService {
 
     @Transactional
     @Override
-    public Map<String, List<?>> getNearbyPublicationsAndEvents(double lat, double lng, double radiusKm) {
-        List<PublicationGetDto> publications = publicationRepository
-                .findAllWithinRadius(lat, lng, radiusKm)
-                .stream()
-                .map(publicationService::mapToDto)
-                .collect(Collectors.toList());
+    public Map<String, List<PostDto>> getNearbyPublicationsAndEvents(long userId) {
+        UserLocationInfoDto locationInfo = userRepository.findLocationInfoById(userId);
+        double lat = locationInfo.getLatitude();
+        double lng = locationInfo.getLongitude();
+        boolean isInCity = locationInfo.getIsInCity();
+        double radiusKm = isInCity ? 2.0 : 15.0;
+
+        List<Publication> publicationsEntities = publicationRepository.findAllWithinRadius(lat, lng, radiusKm);
+        List<PublicationGetDto> publications = new ArrayList<>();
+        for (Publication pub : publicationsEntities) {
+            Hibernate.initialize(pub.getIllustrations());
+            Hibernate.initialize(pub.getLikes());
+            if (pub.getAuthor() != null) {
+                Hibernate.initialize(pub.getAuthor());
+            }
+            PublicationGetDto dto = publicationService.mapToDto(pub);
+            publications.add(dto);
+        }
 
         List<EventGetDto> events = eventRepository
                 .findAllWithinRadius(lat, lng, radiusKm)
@@ -87,12 +97,12 @@ public class HomeServiceImpl implements HomeService {
                 })
                 .collect(Collectors.toList());
 
-        Map<String, List<?>> result = new HashMap<>();
-        result.put("publications", publications);
-        result.put("events", events);
+        Map<String, List<PostDto>> result = new HashMap<>();
+        result.put("publications", new ArrayList<PostDto>(publications));
+        result.put("events", new ArrayList<PostDto>(events));
+
         return result;
     }
-
 
     @Override
     public List<String> getRandomPictures() {

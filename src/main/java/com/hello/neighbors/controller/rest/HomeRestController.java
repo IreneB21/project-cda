@@ -1,5 +1,6 @@
 package com.hello.neighbors.controller.rest;
 
+import com.hello.neighbors.entity.dto.PostDto;
 import com.hello.neighbors.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,9 @@ public class HomeRestController {
         return homeService.getAllPublicationsAndEvents();
     }
 
-    @GetMapping("/display/all/nearby")
-    public Map<String, List<?>> getNearbyPublicationsAndEvents(
-            @RequestParam double lat,
-            @RequestParam double lng,
-            @RequestParam double radiusKm) {
-        return homeService.getNearbyPublicationsAndEvents(lat, lng, radiusKm);
+    @GetMapping("/display/all/nearby/{userId}")
+    public Map<String, List<PostDto>> getNearbyPublicationsAndEvents(@PathVariable long userId) {
+        return homeService.getNearbyPublicationsAndEvents(userId);
     }
 
     @GetMapping("/display/random/user/pictures")

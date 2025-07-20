@@ -40,8 +40,8 @@ public class PublicationRestController {
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<Publication> updatePublication(@RequestBody PublicationUpdateDto dto) {
-        Publication publication = publicationService.update(dto);
+    public ResponseEntity<PublicationGetDto> updatePublication(@RequestBody PublicationUpdateDto dto) {
+        PublicationGetDto publication = publicationService.update(dto);
         return ResponseEntity.ok(publication);
     }
 
