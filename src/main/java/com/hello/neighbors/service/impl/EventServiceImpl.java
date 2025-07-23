@@ -1,8 +1,10 @@
 package com.hello.neighbors.service.impl;
 
+import com.hello.neighbors.entity.CommentEvent;
 import com.hello.neighbors.entity.Event;
 import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.dto.*;
+import com.hello.neighbors.repository.CommentEventRepository;
 import com.hello.neighbors.repository.EventRepository;
 import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.EventService;
@@ -25,8 +27,10 @@ public class EventServiceImpl implements EventService {
     private static final Logger logger = LogManager.getLogger();
 
     private EventRepository eventRepository;
+    private CommentEventRepository commentEventRepository;
     private UserRepository userRepository;
     private GeocodingService geocodingService;
+    private CommentServiceImpl commentService;
 
     @Override
     public Event create(EventCreateDto dto) {
@@ -60,8 +64,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event update(EventUpdateDto dto) {
-        Event existingEvent = eventRepository.findById(dto.getId())
+    @Transactional
+    public EventGetDto update(EventUpdateDto dto) {
+        Event existingEvent = eventRepository.findById(dto.getEventId())
                 .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         existingEvent.setTitle(dto.getTitle());
@@ -73,7 +78,29 @@ public class EventServiceImpl implements EventService {
         existingEvent.setDescription(dto.getDescription());
         existingEvent.setIllustrations(dto.getIllustrations());
 
-        return eventRepository.save(existingEvent);
+        Optional<double[]> coordinates = geocodingService.geocodeAddress(
+                dto.getStreet(),
+                dto.getPostalCode(),
+                dto.getCity()
+        );
+
+        coordinates.ifPresent(coords -> {
+            existingEvent.setLatitude(coords[0]);
+            existingEvent.setLongitude(coords[1]);
+        });
+
+        eventRepository.save(existingEvent);
+
+        List<EventParticipantDto> participants = existingEvent.getParticipants().stream()
+                .map(sub -> new EventParticipantDto(
+                        sub.getId(),
+                        sub.getFirstname(),
+                        sub.getLastname()))
+                .collect(Collectors.toList());
+
+        EventGetDto updatedEvent = this.mapToDto(existingEvent, participants);
+
+        return updatedEvent;
     }
 
     @Transactional
@@ -114,12 +141,24 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void cancel(EventCancelDto dto) {
+    public boolean cancel(EventCancelDto dto) {
         Optional<Event> eventToCancel = eventRepository.findById(dto.getEventId());
         if (eventToCancel.isEmpty()) {
             logger.info("Event not find with ID :" + dto.getEventId());
+
+            return false;
         }
-        eventRepository.deleteById(dto.getEventId());
+
+        Event event = eventToCancel.get();
+        List<CommentEvent> comments = commentEventRepository.findByEvent(event);
+        for (CommentEvent comment : comments) {
+            if (comment.getParentComment() == null) {
+                commentService.deleteEventCommentCascade(comment);
+            }
+        }
+        eventRepository.delete(event);
+
+        return true;
     }
 
     @Override
@@ -201,5 +240,13 @@ public class EventServiceImpl implements EventService {
     @Autowired
     public void setGeocodingService(GeocodingService geocodingService) {
         this.geocodingService = geocodingService;
+    }
+    @Autowired
+    public void setCommentEventRepository(CommentEventRepository commentEventRepository) {
+        this.commentEventRepository = commentEventRepository;
+    }
+    @Autowired
+    public void setCommentService(CommentServiceImpl commentService) {
+        this.commentService = commentService;
     }
 }

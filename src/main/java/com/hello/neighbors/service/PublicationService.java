@@ -11,7 +11,7 @@ public interface PublicationService {
     Publication create(PublicationCreateDto dto);
     PublicationGetDto update(PublicationUpdateDto dto);
     Publication manageLikes(PublicationUpdateLikesDto dto);
-    void delete(PublicationDeleteDto dto);
+    boolean delete(PublicationDeleteDto dto);
     List<PublicationGetDto> getUserPublications(long id);
     List<PublicationGetDto> fetchAll();
 }

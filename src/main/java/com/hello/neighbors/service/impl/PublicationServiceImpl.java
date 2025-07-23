@@ -1,8 +1,10 @@
 package com.hello.neighbors.service.impl;
 
+import com.hello.neighbors.entity.CommentPublication;
 import com.hello.neighbors.entity.Publication;
 import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.dto.*;
+import com.hello.neighbors.repository.CommentPublicationRepository;
 import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.service.GeocodingService;
 import com.hello.neighbors.service.PublicationService;
@@ -24,7 +26,9 @@ public class PublicationServiceImpl implements PublicationService {
     private static final Logger logger = LogManager.getLogger();
 
     private PublicationRepository publicationRepository;
+    private CommentPublicationRepository commentPublicationRepository;
     private GeocodingService geocodingService;
+    private CommentServiceImpl commentService;
 
     @Override
     public Publication create(PublicationCreateDto dto) {
@@ -106,14 +110,22 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-    public void delete(PublicationDeleteDto dto) {
-        logger.info("Publication ID passé: " + dto.getPublicationId());
-
+    public boolean delete(PublicationDeleteDto dto) {
         Optional<Publication> publicationToDelete = publicationRepository.findById(dto.getPublicationId());
         if (publicationToDelete.isEmpty()) {
             logger.info("Publication non trouvée pour l'ID: " + dto.getPublicationId());
+
+            return false;
         }
-        publicationRepository.deleteById(dto.getPublicationId());
+
+        Publication publication = publicationToDelete.get();
+        List<CommentPublication> comments = commentPublicationRepository.findByPublication(publication);
+        for (CommentPublication comment : comments) {
+            commentService.deletePublicationCommentCascade(comment);
+        }
+        publicationRepository.delete(publication);
+
+        return true;
     }
 
     @Override
@@ -172,5 +184,13 @@ public class PublicationServiceImpl implements PublicationService {
     @Autowired
     public void setGeocodingService(GeocodingService geocodingService) {
         this.geocodingService = geocodingService;
+    }
+    @Autowired
+    public void setCommentPublicationRepository(CommentPublicationRepository commentPublicationRepository) {
+        this.commentPublicationRepository = commentPublicationRepository;
+    }
+    @Autowired
+    public void setCommentService(CommentServiceImpl commentService) {
+        this.commentService = commentService;
     }
 }

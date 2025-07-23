@@ -36,11 +36,11 @@ public class Event {
     @ManyToOne
     private Subscriber author;
 
+    @OneToMany(mappedBy = "event", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
     private List<CommentEvent> comments;
 
-    @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "event_participants",
             joinColumns = @JoinColumn(name = "event_id"),

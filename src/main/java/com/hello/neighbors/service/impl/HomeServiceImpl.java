@@ -1,5 +1,6 @@
 package com.hello.neighbors.service.impl;
 
+import com.hello.neighbors.entity.Event;
 import com.hello.neighbors.entity.Publication;
 import com.hello.neighbors.entity.dto.*;
 import com.hello.neighbors.repository.EventRepository;
@@ -82,20 +83,22 @@ public class HomeServiceImpl implements HomeService {
             publications.add(dto);
         }
 
-        List<EventGetDto> events = eventRepository
-                .findAllWithinRadius(lat, lng, radiusKm)
-                .stream()
-                .map(event -> {
-                    List<EventParticipantDto> participants = event.getParticipants().stream()
-                            .map(sub -> new EventParticipantDto(
-                                    sub.getId(),
-                                    sub.getFirstname(),
-                                    sub.getLastname()))
-                            .collect(Collectors.toList());
-
-                    return this.eventService.mapToDto(event, participants);
-                })
-                .collect(Collectors.toList());
+        List<Event> eventEntities = eventRepository.findAllWithinRadius(lat, lng, radiusKm);
+        List<EventGetDto> events = new ArrayList<>();
+        for (Event ev : eventEntities) {
+            Hibernate.initialize(ev.getIllustrations());
+            Hibernate.initialize(ev.getLikes());
+            if (ev.getAuthor() != null) {
+                Hibernate.initialize(ev.getAuthor());
+            }
+            Hibernate.initialize(ev.getParticipants());
+            List<EventParticipantDto> participants = ev.getParticipants()
+                    .stream()
+                    .map(p -> new EventParticipantDto(p.getId(), p.getFirstname(), p.getLastname()))
+                    .collect(Collectors.toList());
+            EventGetDto dto = eventService.mapToDto(ev, participants);
+            events.add(dto);
+        }
 
         Map<String, List<PostDto>> result = new HashMap<>();
         result.put("publications", new ArrayList<PostDto>(publications));

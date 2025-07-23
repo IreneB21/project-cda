@@ -5,7 +5,7 @@ import java.util.List;
 
 public class EventUpdateDto {
 
-    private Long id;
+    private Long eventId;
     private String title;
     private String city;
     private String postalCode;
@@ -17,8 +17,8 @@ public class EventUpdateDto {
 
     ///////////// Getters and Setters ////////////////////
 
-    public Long getId() {
-        return id;
+    public Long getEventId() {
+        return eventId;
     }
     public String getTitle() {
         return title;
@@ -45,8 +45,8 @@ public class EventUpdateDto {
         return illustrations;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
     public void setTitle(String title) {
         this.title = title;

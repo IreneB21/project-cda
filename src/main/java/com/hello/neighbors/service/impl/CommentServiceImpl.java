@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -129,6 +130,26 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentGetDto> getEventAssociatedComments(long postId) {
         List<CommentGetDto> comments = commentEventRepository.findByEventId(postId);
         return comments;
+    }
+
+    public void deleteEventCommentCascade(CommentEvent comment) {
+        List<CommentEvent> children = commentEventRepository.findByParentComment(comment);
+
+        for (CommentEvent child : children) {
+            deleteEventCommentCascade(child);
+        }
+
+        commentEventRepository.delete(comment);
+    }
+
+    public void deletePublicationCommentCascade(CommentPublication comment) {
+        List<CommentPublication> children = commentPublicationRepository.findByParentComment(comment);
+
+        for (CommentPublication child : children) {
+            deletePublicationCommentCascade(child);
+        }
+
+        commentPublicationRepository.delete(comment);
     }
 
     @Autowired

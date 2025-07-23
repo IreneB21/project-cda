@@ -63,8 +63,8 @@ public class PublicationRestController {
     }
 
     @DeleteMapping("/delete")
-    public void deletePublication(@RequestBody PublicationDeleteDto dto) {
-        publicationService.delete(dto);
+    public boolean deletePublication(@RequestBody PublicationDeleteDto dto) {
+        return publicationService.delete(dto);
     }
 
     @Autowired

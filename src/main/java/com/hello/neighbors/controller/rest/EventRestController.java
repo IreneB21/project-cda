@@ -29,9 +29,9 @@ public class EventRestController {
         return ResponseEntity.ok(event);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Event> updateEvent(@RequestBody EventUpdateDto dto) {
-        Event event = eventService.update(dto);
+    @PatchMapping("/update")
+    public ResponseEntity<EventGetDto> updateEvent(@RequestBody EventUpdateDto dto) {
+        EventGetDto event = eventService.update(dto);
         return ResponseEntity.ok(event);
     }
 
@@ -65,8 +65,8 @@ public class EventRestController {
     }
 
     @DeleteMapping("/cancel")
-    public void cancelEvent(@RequestBody EventCancelDto dto) {
-        eventService.cancel(dto);
+    public boolean cancelEvent(@RequestBody EventCancelDto dto) {
+        return eventService.cancel(dto);
     }
 
     @Autowired
