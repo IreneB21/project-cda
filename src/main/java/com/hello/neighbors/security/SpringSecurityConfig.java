@@ -87,6 +87,8 @@ public class SpringSecurityConfig {
                 .requestMatchers("/api/rest/hello/neighbors/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/home/display/all").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/home/display/all/nearby/{userId}").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/home/display/next/three/nearby").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/api/rest/hello/neighbors/home/calculate/users/around").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/api/rest/hello/neighbors/home/display/random/user/pictures").hasAnyAuthority("USER", "ADMIN");
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

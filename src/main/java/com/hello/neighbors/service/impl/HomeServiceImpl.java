@@ -107,6 +107,45 @@ public class HomeServiceImpl implements HomeService {
         return result;
     }
 
+    @Transactional
+    @Override
+    public List<EventGetDto> getNextThreeNearbyEvents(long userId) {
+        UserLocationInfoDto locationInfo = userRepository.findLocationInfoById(userId);
+        double lat = locationInfo.getLatitude();
+        double lng = locationInfo.getLongitude();
+        boolean isInCity = locationInfo.getIsInCity();
+        double radiusKm = isInCity ? 2.0 : 15.0;
+
+        List<Event> eventEntities = eventRepository.findNext3EventsWithinRadius(lat, lng, radiusKm);
+        List<EventGetDto> events = new ArrayList<>();
+        for (Event ev : eventEntities) {
+            Hibernate.initialize(ev.getIllustrations());
+            Hibernate.initialize(ev.getLikes());
+            if (ev.getAuthor() != null) {
+                Hibernate.initialize(ev.getAuthor());
+            }
+            Hibernate.initialize(ev.getParticipants());
+            List<EventParticipantDto> participants = ev.getParticipants()
+                    .stream()
+                    .map(p -> new EventParticipantDto(p.getId(), p.getFirstname(), p.getLastname()))
+                    .collect(Collectors.toList());
+            EventGetDto dto = eventService.mapToDto(ev, participants);
+            events.add(dto);
+        }
+        return events;
+    }
+
+    @Override
+    public Long getTotalUsersAround(long userId) {
+        UserLocationInfoDto locationInfo = userRepository.findLocationInfoById(userId);
+        double lat = locationInfo.getLatitude();
+        double lng = locationInfo.getLongitude();
+        boolean isInCity = locationInfo.getIsInCity();
+        double radiusKm = isInCity ? 2.0 : 15.0;
+
+        return userRepository.calculateTotalUsersWithinRadius(lat, lng, radiusKm, userId);
+    }
+
     @Override
     public List<String> getRandomPictures() {
         return userRepository.fetchRandomPictures();

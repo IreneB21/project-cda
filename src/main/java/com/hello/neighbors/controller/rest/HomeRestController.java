@@ -1,5 +1,6 @@
 package com.hello.neighbors.controller.rest;
 
+import com.hello.neighbors.entity.dto.EventGetDto;
 import com.hello.neighbors.entity.dto.PostDto;
 import com.hello.neighbors.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,18 @@ public class HomeRestController {
         return homeService.getNearbyPublicationsAndEvents(userId);
     }
 
+    @GetMapping("/display/next/three/nearby")
+    public List<EventGetDto> getNextThreeNearbyEvents(@RequestParam long userId) {
+        return homeService.getNextThreeNearbyEvents(userId);
+    }
+
     @GetMapping("/display/random/user/pictures")
     public List<String> getRandomUserPictures() {
         return homeService.getRandomPictures();
     }
+
+    @GetMapping("/calculate/users/around")
+    public Long getTotalUsersAround(@RequestParam long userId) { return homeService.getTotalUsersAround(userId); }
 
     @Autowired
     public void setHomeService(HomeService homeService) {

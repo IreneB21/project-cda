@@ -26,4 +26,19 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllWithinRadius(@Param("lat") double lat,
                                     @Param("lng") double lng,
                                     @Param("radiusKm") double radiusKm);
+
+    @Query(value = """
+        SELECT e.* FROM Event e
+        WHERE (6371 * acos(
+            cos(radians(:lat)) * cos(radians(e.latitude)) *
+            cos(radians(e.longitude) - radians(:lng)) +
+            sin(radians(:lat)) * sin(radians(e.latitude))
+        )) <= :radiusKm
+        AND e.start_date >= CURRENT_DATE
+        ORDER BY e.start_date ASC
+        LIMIT 3
+        """, nativeQuery = true)
+    List<Event> findNext3EventsWithinRadius(@Param("lat") double lat,
+                                            @Param("lng") double lng,
+                                            @Param("radiusKm") double radiusKm);
 }

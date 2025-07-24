@@ -28,4 +28,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT s.latitude AS latitude, s.longitude AS longitude, s.isInCity AS isInCity FROM Subscriber s WHERE s.id = :userId")
     UserLocationInfoDto findLocationInfoById(@Param("userId") Long userId);
+
+    @Query(value = """
+    SELECT COUNT(*) FROM subscriber s
+    WHERE s.id <> :currentUserId AND (
+      6371 * acos(
+        cos(radians(:lat)) * cos(radians(s.latitude)) *
+        cos(radians(s.longitude) - radians(:lng)) +
+        sin(radians(:lat)) * sin(radians(s.latitude))
+      )
+    ) <= :radiusKm
+    """, nativeQuery = true)
+    Long calculateTotalUsersWithinRadius(@Param("lat") double lat,
+                                         @Param("lng") double lng,
+                                         @Param("radiusKm") double radiusKm,
+                                         @Param("currentUserId") long currentUserId);
 }
