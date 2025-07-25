@@ -9,11 +9,11 @@ import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.service.GeocodingService;
 import com.hello.neighbors.service.PublicationService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +31,8 @@ public class PublicationServiceImpl implements PublicationService {
     private CommentServiceImpl commentService;
 
     @Override
-    public Publication create(PublicationCreateDto dto) {
+    @Transactional
+    public PublicationGetDto create(PublicationCreateDto dto) {
         Subscriber author = new Subscriber();
         author.setId(dto.getAuthorId());
         Publication publication = new Publication();
@@ -60,7 +61,11 @@ public class PublicationServiceImpl implements PublicationService {
         publication.setCategory(dto.getCategory());
 
         //author.setPublications(publication);
-        return publicationRepository.save(publication);
+        publicationRepository.save(publication);
+
+        PublicationGetDto newPublication = this.mapToDto(publication);
+
+        return newPublication;
     }
 
     @Override
@@ -94,6 +99,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional
     public Publication manageLikes(PublicationUpdateLikesDto dto) {
         Publication publication = publicationRepository.findById(dto.getPublicationId())
                 .orElseThrow(() -> new RuntimeException("Publication not found"));
@@ -110,6 +116,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional
     public boolean delete(PublicationDeleteDto dto) {
         Optional<Publication> publicationToDelete = publicationRepository.findById(dto.getPublicationId());
         if (publicationToDelete.isEmpty()) {
@@ -129,6 +136,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PublicationGetDto> getUserPublications(long id) {
         List<Publication> publications = publicationRepository.findPublicationsWithAuthorByAuthorId(id);
 
@@ -138,6 +146,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PublicationGetDto> fetchAll() {
         List<Publication> publications = publicationRepository.findAll();
 
@@ -163,7 +172,7 @@ public class PublicationServiceImpl implements PublicationService {
         dto.setPublicationDate(pub.getPublicationDate());
 
         Subscriber author = pub.getAuthor();
-        PublicationAuthorDto authorDto = new PublicationAuthorDto(
+        AuthorDto authorDto = new AuthorDto(
                 author.getId(),
                 author.getFirstname(),
                 author.getLastname(),

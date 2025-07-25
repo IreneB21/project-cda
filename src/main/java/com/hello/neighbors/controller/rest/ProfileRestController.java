@@ -3,6 +3,7 @@ package com.hello.neighbors.controller.rest;
 import com.hello.neighbors.entity.User;
 import com.hello.neighbors.entity.dto.ProfileUpdateBioDto;
 import com.hello.neighbors.entity.dto.ProfileUpdateDto;
+import com.hello.neighbors.entity.dto.SubscriberDto;
 import com.hello.neighbors.entity.dto.UserGetForVisitorDto;
 import com.hello.neighbors.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ProfileRestController {
     //////////////// Endpoints ////////////////
 
     @GetMapping("/user/{id}/infos")
-    public User getUserInfos(@PathVariable long id) {
+    public SubscriberDto getUserInfos(@PathVariable long id) {
         return profileService.getUserInfos(id);
     }
 
@@ -48,7 +49,7 @@ public class ProfileRestController {
     }
 
     @PutMapping("/update/bio")
-    public ResponseEntity<Object> updateBio(@RequestBody ProfileUpdateBioDto dto) {
+    public ResponseEntity<ProfileUpdateBioDto> updateBio(@RequestBody ProfileUpdateBioDto dto) {
         return profileService.updateBio(dto);
     }
 

@@ -117,6 +117,9 @@ public abstract class User implements UserDetails {
     public List<Role> getRoles() {
         return roles;
     }
+    public String getEmail() {
+        return email;
+    }
 
     ////////////// Setters ///////////////////
 

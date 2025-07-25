@@ -34,8 +34,8 @@ public class PublicationRestController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Publication> createPublication(@RequestBody PublicationCreateDto dto) {
-        Publication publication = publicationService.create(dto);
+    public ResponseEntity<PublicationGetDto> createPublication(@RequestBody PublicationCreateDto dto) {
+        PublicationGetDto publication = publicationService.create(dto);
         return ResponseEntity.ok(publication);
     }
 

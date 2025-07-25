@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PublicationService {
 
-    Publication create(PublicationCreateDto dto);
+    PublicationGetDto create(PublicationCreateDto dto);
     PublicationGetDto update(PublicationUpdateDto dto);
     Publication manageLikes(PublicationUpdateLikesDto dto);
     boolean delete(PublicationDeleteDto dto);

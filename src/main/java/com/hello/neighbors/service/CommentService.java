@@ -11,10 +11,10 @@ import java.util.List;
 
 public interface CommentService {
 
-    CommentPublication update(CommentUpdateDto dto);
+    CommentGetDto update(CommentUpdateDto dto);
     void delete(CommentDeleteDto dto);
     List<CommentGetDto> getPublicationAssociatedComments(long postId);
     List<CommentGetDto> getEventAssociatedComments(long postId);
-    CommentPublication createPublicationComment(CommentCreateDto dto);
-    CommentEvent createEventComment(CommentCreateDto dto);
+    CommentGetDto createPublicationComment(CommentCreateDto dto);
+    CommentGetDto createEventComment(CommentCreateDto dto);
 }

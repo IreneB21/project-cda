@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,9 +43,10 @@ public class SecurityServiceImpl implements SecurityService {
     private JwtUtilities jwtUtilities;
     private GeocodingService geocodingService;
 
-    ////////////////// Méthodes ////////////////
+    ////////////////// Methods ////////////////
 
     @Override
+    @Transactional
     public ResponseEntity<Object> register(RegistrationDto registrationDto) {
         if (userRepository.existsByEmail(registrationDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Identifiant déjà utilisé");
@@ -84,34 +86,48 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public ResponseEntity<UserDto> authenticate(AuthenticationDto authenticationDto) {
-        Authentication authentication= authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationDto.getEmail(),
-                        authenticationDto.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = userRepository.findByEmail(authentication.getName());
-        List<String> rolesNames = new ArrayList<>();
-        user.getRoles().forEach(role-> rolesNames.add(role.getRoleName()));
-        String token = jwtUtilities.generateToken(user.getUsername(),rolesNames);
-
-        String latitude = null;
-        String longitude = null;
-        if (user instanceof Subscriber subscriber) {
-            latitude = String.valueOf(subscriber.getLatitude());
-            longitude = String.valueOf(subscriber.getLongitude());
+    public ResponseEntity<Object> authenticate(AuthenticationDto authenticationDto) {
+        if (!userRepository.existsByEmail(authenticationDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Identifiants non enregistrés.");
         }
-        UserDto userDto = new UserDto(
-                user.getId(),
-                user.getFirstname(),
-                user.getLastname(),
-                token,
-                latitude,
-                longitude
-        );
-        return ResponseEntity.ok(userDto);
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            authenticationDto.getEmail(),
+                            authenticationDto.getPassword()
+                    )
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            User user = userRepository.findByEmail(authentication.getName());
+
+            List<String> rolesNames = new ArrayList<>();
+            user.getRoles().forEach(role -> rolesNames.add(role.getRoleName()));
+            String token = jwtUtilities.generateToken(user.getUsername(), rolesNames);
+
+            UserDto userDto = new UserDto();
+            userDto.setId(user.getId());
+            userDto.setFirstname(user.getFirstname());
+            userDto.setLastname(user.getLastname());
+            userDto.setPseudonym(user.getPseudonym());
+            userDto.setEmail(user.getEmail());
+
+            if (user instanceof Subscriber subscriber) {
+                userDto.setToken(token);
+                userDto.setLatitude(subscriber.getLatitude());
+                userDto.setLongitude(subscriber.getLongitude());
+                userDto.setCity(subscriber.getCity());
+                userDto.setPostalCode(subscriber.getPostalCode());
+                userDto.setStreet(subscriber.getStreet());
+                userDto.setInCity(subscriber.getIsInCity());
+            }
+
+            return ResponseEntity.ok(userDto);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants incorrects");
+        }
     }
 
     ////////////////// Setters ////////////////

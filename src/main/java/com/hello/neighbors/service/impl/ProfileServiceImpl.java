@@ -16,7 +16,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,68 +34,90 @@ public class ProfileServiceImpl implements ProfileService {
     private EventRepository eventRepository;
     private EventServiceImpl eventService;
     private PublicationServiceImpl publicationService;
+    private PasswordEncoder passwordEncoder;
 
-    ////////////////// Méthodes ////////////////
+    ////////////////// Methods ////////////////
 
     @Override
+    @Transactional
     public ResponseEntity<Object> update(ProfileUpdateDto dto) {
-        if (userRepository.existsByEmail(dto.getEmail())) {
+        Subscriber existingUser = (Subscriber) userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!existingUser.getEmail().equals(dto.getEmail()) && userRepository.existsByEmail(dto.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Identifiant déjà utilisé");
-        } else {
-            Subscriber existingUser = (Subscriber) userRepository.findById(dto.getUserId())
-                    .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-            existingUser.setLastname(dto.getLastname());
-            existingUser.setFirstname(dto.getFirstname());
-            existingUser.setPseudonym(dto.getPseudonym());
-            existingUser.setPassword(dto.getPassword()); // Consider encoding password
-            existingUser.setEmail(dto.getEmail());
-            existingUser.setCity(dto.getCity());
-            existingUser.setPostalCode(dto.getPostalCode());
-            existingUser.setStreet(dto.getStreet());
-
-            Optional<double[]> coordinates = geocodingService.geocodeAddress(
-                    dto.getStreet(),
-                    dto.getPostalCode(),
-                    dto.getCity()
-            );
-            coordinates.ifPresent(coords -> {
-                existingUser.setLatitude(coords[0]);
-                existingUser.setLongitude(coords[1]);
-            });
-
-            existingUser.setIsInCity(dto.isInCity());
-            existingUser.setBirthdate(dto.getBirthdate());
-            existingUser.setIntroduction(dto.getIntroduction());
-            existingUser.setPhone(dto.getPhone());
-            existingUser.setPicture(dto.getPicture());
-            existingUser.setNotificationPreferences(dto.getNotificationPreferences());
-
-            return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(existingUser));
         }
+
+        existingUser.setLastname(dto.getLastname());
+        existingUser.setFirstname(dto.getFirstname());
+        existingUser.setPseudonym(dto.getPseudonym());
+
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        existingUser.setEmail(dto.getEmail());
+        existingUser.setCity(dto.getCity());
+        existingUser.setPostalCode(dto.getPostalCode());
+        existingUser.setStreet(dto.getStreet());
+
+        Optional<double[]> coordinates = geocodingService.geocodeAddress(
+                dto.getStreet(),
+                dto.getPostalCode(),
+                dto.getCity()
+        );
+        coordinates.ifPresent(coords -> {
+            existingUser.setLatitude(coords[0]);
+            existingUser.setLongitude(coords[1]);
+        });
+
+        existingUser.setIsInCity(dto.isInCity());
+        existingUser.setBirthdate(dto.getBirthdate());
+        existingUser.setIntroduction(dto.getIntroduction());
+        existingUser.setPhone(dto.getPhone());
+        existingUser.setPicture(dto.getPicture());
+        existingUser.setNotificationPreferences(dto.getNotificationPreferences());
+
+        userRepository.save(existingUser);
+
+        return ResponseEntity.ok(mapToDto(existingUser));
     }
 
     @Override
-    public User getUserInfos(long id) {
-        return userRepository.findUserById(id);
+    @Transactional(readOnly = true)
+    public SubscriberDto getUserInfos(long id) {
+        Subscriber subscriber = (Subscriber) userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return mapToDto(subscriber);
     }
 
     @Override
-    public ResponseEntity<Object> updateBio(ProfileUpdateBioDto dto) {
+    @Transactional
+    public ResponseEntity<ProfileUpdateBioDto> updateBio(ProfileUpdateBioDto dto) {
         logger.info("User ID : " + dto.getUserId());
         Subscriber existingUser = (Subscriber) userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         existingUser.setIntroduction(dto.getBody());
         logger.info("Présentation : " + dto.getBody());
-        return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(existingUser));
+
+        userRepository.save(existingUser);
+
+        ProfileUpdateBioDto updatedBio = new ProfileUpdateBioDto(
+                existingUser.getId(),
+                existingUser.getIntroduction()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedBio);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserGetForVisitorDto getUserInfosForVisitor(long id) {
         return userRepository.getUserInfosForVisitor(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, List<?>> getUserPosts(long userId) {
         List<PublicationGetDto> publications = publicationRepository
                 .findPublicationsWithAuthorByAuthorId(userId)
@@ -122,6 +146,24 @@ public class ProfileServiceImpl implements ProfileService {
         return result;
     }
 
+    private SubscriberDto mapToDto(Subscriber subscriber) {
+        return new SubscriberDto(
+                subscriber.getId(),
+                subscriber.getFirstname(),
+                subscriber.getLastname(),
+                subscriber.getPseudonym(),
+                subscriber.getEmail(),
+                subscriber.getLatitude(),
+                subscriber.getLongitude(),
+                subscriber.getCity(),
+                subscriber.getPostalCode(),
+                subscriber.getStreet(),
+                subscriber.getIsInCity(),
+                subscriber.getBirthdate(),
+                subscriber.getPhone()
+        );
+    }
+
     ////////////////// Setters ////////////////
 
     @Autowired
@@ -147,5 +189,9 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     public void setPublicationService(PublicationServiceImpl publicationService) {
         this.publicationService = publicationService;
+    }
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 }

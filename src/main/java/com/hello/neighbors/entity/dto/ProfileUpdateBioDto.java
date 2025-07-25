@@ -5,7 +5,17 @@ public class ProfileUpdateBioDto {
     private Long userId;
     private String body;
 
-    ///////////// Méthodes ////////////////////
+    ///////////// Constructors ////////////////////
+
+    public ProfileUpdateBioDto() {
+    }
+
+    public ProfileUpdateBioDto(Long userId, String body) {
+        this.userId = userId;
+        this.body = body;
+    }
+
+    ///////////// Methods ////////////////////
 
     @Override
     public String toString() {

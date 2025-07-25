@@ -17,7 +17,7 @@ public class EventGetDto implements PostDto {
     private String description;
     private List<String> illustrations;
     private List<EventParticipantDto> participants;
-    private EventAuthorDto author;
+    private AuthorDto author;
     private Set<EventLikeDto> likes;
     private LocalDateTime creationDate;
 
@@ -28,7 +28,7 @@ public class EventGetDto implements PostDto {
     public EventGetDto(Long id, String title, String city, String postalCode, String street, double latitude,
                        double longitude, LocalDateTime startDate, LocalDateTime endDate, String description,
                        List<String> illustrations, List<EventParticipantDto> participants,
-                       EventAuthorDto author, Set<EventLikeDto> likes, LocalDateTime creationDate) {
+                       AuthorDto author, Set<EventLikeDto> likes, LocalDateTime creationDate) {
         this.id = id;
         this.title = title;
         this.city = city;
@@ -82,7 +82,7 @@ public class EventGetDto implements PostDto {
     public List<EventParticipantDto> getParticipants() {
         return participants;
     }
-    public EventAuthorDto getAuthor() { return author; }
+    public AuthorDto getAuthor() { return author; }
     public Set<EventLikeDto> getLikes() {
         return likes;
     }
@@ -126,7 +126,7 @@ public class EventGetDto implements PostDto {
     public void setParticipants(List<EventParticipantDto> participants) {
         this.participants = participants;
     }
-    public void setAuthor(EventAuthorDto author) { this.author = author; }
+    public void setAuthor(AuthorDto author) { this.author = author; }
     public void setLikes(Set<EventLikeDto> likes) {
         this.likes = likes;
     }

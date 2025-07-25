@@ -1,6 +1,6 @@
 package com.hello.neighbors.entity.dto;
 
-public class PublicationAuthorDto {
+public class AuthorDto {
     private Long id;
     private String firstname;
     private String lastname;
@@ -9,9 +9,9 @@ public class PublicationAuthorDto {
 
     ////////////// Constructors ////////////////
 
-    public PublicationAuthorDto() {}
+    public AuthorDto() {}
 
-    public PublicationAuthorDto(Long id, String firstname, String lastname, String pseudonym, String picture) {
+    public AuthorDto(Long id, String firstname, String lastname, String pseudonym, String picture) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;

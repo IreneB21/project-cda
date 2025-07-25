@@ -4,7 +4,7 @@ public class CommentGetDto {
 
     private Long id;
     private String body;
-    private Long authorId;
+    private AuthorDto author;
     private Long parentId;
     private Long parentCommentId;
 
@@ -13,15 +13,13 @@ public class CommentGetDto {
     public CommentGetDto() {
     }
 
-    public CommentGetDto(Long id, String body, Long authorId, Long parentId, Long parentCommentId) {
+    public CommentGetDto(Long id, String body, AuthorDto author, Long parentId, Long parentCommentId) {
         this.id = id;
         this.body = body;
-        this.authorId = authorId;
+        this.author = author;
         this.parentId = parentId;
         this.parentCommentId = parentCommentId;
     }
-
-
 
     ///////////// Getters and Setters ////////////////////
 
@@ -31,8 +29,8 @@ public class CommentGetDto {
     public String getBody() {
         return body;
     }
-    public Long getAuthorId() {
-        return authorId;
+    public AuthorDto getAuthor() {
+        return author;
     }
     public Long getParentId() {
         return parentId;
@@ -47,8 +45,8 @@ public class CommentGetDto {
     public void setBody(String body) {
         this.body = body;
     }
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
+    public void setAuthor(AuthorDto author) {
+        this.author = author;
     }
     public void setParentId(Long parentId) {
         this.parentId = parentId;

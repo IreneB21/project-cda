@@ -10,11 +10,11 @@ import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.EventService;
 import com.hello.neighbors.service.GeocodingService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +33,8 @@ public class EventServiceImpl implements EventService {
     private CommentServiceImpl commentService;
 
     @Override
-    public Event create(EventCreateDto dto) {
+    @Transactional
+    public EventGetDto create(EventCreateDto dto) {
         Subscriber author = new Subscriber();
         author.setId(dto.getAuthorId());
         Event event = new Event();
@@ -60,7 +61,18 @@ public class EventServiceImpl implements EventService {
         event.setIllustrations(dto.getIllustrations());
         event.setAuthor(author);
 
-        return eventRepository.save(event);
+        List<EventParticipantDto> participants = event.getParticipants().stream()
+                .map(sub -> new EventParticipantDto(
+                        sub.getId(),
+                        sub.getFirstname(),
+                        sub.getLastname()))
+                .collect(Collectors.toList());
+
+        eventRepository.save(event);
+
+        EventGetDto newEvent = this.mapToDto(event, participants);
+
+        return newEvent;
     }
 
     @Override
@@ -103,8 +115,8 @@ public class EventServiceImpl implements EventService {
         return updatedEvent;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Event manageParticipation(EventUpdateParticipantsDto dto) {
         Event event = eventRepository.findById(dto.getEventId())
                 .orElseThrow(() -> new EntityNotFoundException("Event not found"));
@@ -123,8 +135,8 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Event manageLikes(EventUpdateLikesDto dto) {
         Event event = eventRepository.findById(dto.getEventId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
@@ -141,6 +153,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public boolean cancel(EventCancelDto dto) {
         Optional<Event> eventToCancel = eventRepository.findById(dto.getEventId());
         if (eventToCancel.isEmpty()) {
@@ -162,6 +175,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventGetDto> getUserEvents(long id) {
         List<Event> events = eventRepository.findEventsWithParticipantsAndAuthorByAuthorId(id);
 
@@ -180,6 +194,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventGetDto> fetchAll() {
         List<Event> events = eventRepository.findAll();
 
@@ -215,7 +230,7 @@ public class EventServiceImpl implements EventService {
         dto.setParticipants(participants);
 
         Subscriber author = ev.getAuthor();
-        EventAuthorDto authorDto = new EventAuthorDto(
+        AuthorDto authorDto = new AuthorDto(
                 author.getId(),
                 author.getFirstname(),
                 author.getLastname(),

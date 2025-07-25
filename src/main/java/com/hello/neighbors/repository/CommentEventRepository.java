@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CommentEventRepository extends JpaRepository<CommentEvent, Long> {
 
-    List<CommentGetDto> findByEventId(long postId);
+    List<CommentEvent> findByEventId(long postId);
 
     List<CommentEvent> findByEvent(Event event);
 

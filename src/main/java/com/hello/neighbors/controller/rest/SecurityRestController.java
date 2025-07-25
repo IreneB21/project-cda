@@ -27,7 +27,7 @@ public class SecurityRestController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<UserDto> authenticate(@RequestBody AuthenticationDto authenticationDto) {
+    public ResponseEntity<Object> authenticate(@RequestBody AuthenticationDto authenticationDto) {
         return securityService.authenticate(authenticationDto);
     }
 

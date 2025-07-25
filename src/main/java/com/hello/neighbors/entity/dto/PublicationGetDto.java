@@ -17,7 +17,7 @@ public class PublicationGetDto implements PostDto {
     private double longitude;
     private String description;
     private List<String> illustrations;
-    private PublicationAuthorDto author;
+    private AuthorDto author;
     private Set<Long> likes;
     private LocalDateTime publicationDate;
 
@@ -29,7 +29,7 @@ public class PublicationGetDto implements PostDto {
     public PublicationGetDto(Long id, String title, PublicationCategory category,
                              String city, String postalCode, String street, double latitude, double longitude,
                              String description, List<String> illustrations,
-                             PublicationAuthorDto author, Set<Long> likes, LocalDateTime publicationDate) {
+                             AuthorDto author, Set<Long> likes, LocalDateTime publicationDate) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -77,7 +77,7 @@ public class PublicationGetDto implements PostDto {
     public List<String> getIllustrations() {
         return illustrations;
     }
-    public PublicationAuthorDto getAuthor() {
+    public AuthorDto getAuthor() {
         return author;
     }
     public Set<Long> getLikes() {
@@ -117,7 +117,7 @@ public class PublicationGetDto implements PostDto {
     public void setIllustrations(List<String> illustrations) {
         this.illustrations = illustrations;
     }
-    public void setAuthor(PublicationAuthorDto author) {
+    public void setAuthor(AuthorDto author) {
         this.author = author;
     }
     public void setLikes(Set<Long> likes) {

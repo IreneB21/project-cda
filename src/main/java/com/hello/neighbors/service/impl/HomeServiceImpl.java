@@ -7,12 +7,12 @@ import com.hello.neighbors.repository.EventRepository;
 import com.hello.neighbors.repository.PublicationRepository;
 import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.HomeService;
-import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,9 +31,10 @@ public class HomeServiceImpl implements HomeService {
     private EventServiceImpl eventService;
     private PublicationServiceImpl publicationService;
 
-    ////////////////// Méthodes ////////////////
+    ////////////////// Methods ////////////////
 
     @Override
+    @Transactional
     public Map<String, List<?>> getAllPublicationsAndEvents() {
         List<PublicationGetDto> publications = publicationRepository
                 .findAll()
@@ -62,8 +63,8 @@ public class HomeServiceImpl implements HomeService {
         return result;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Map<String, List<PostDto>> getNearbyPublicationsAndEvents(long userId) {
         UserLocationInfoDto locationInfo = userRepository.findLocationInfoById(userId);
         double lat = locationInfo.getLatitude();
@@ -107,8 +108,8 @@ public class HomeServiceImpl implements HomeService {
         return result;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public List<EventGetDto> getNextThreeNearbyEvents(long userId) {
         UserLocationInfoDto locationInfo = userRepository.findLocationInfoById(userId);
         double lat = locationInfo.getLatitude();

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EventService {
 
-    Event create(EventCreateDto dto);
+    EventGetDto create(EventCreateDto dto);
     EventGetDto update(EventUpdateDto dto);
     Event manageParticipation(EventUpdateParticipantsDto dto);
     Event manageLikes(EventUpdateLikesDto dto);

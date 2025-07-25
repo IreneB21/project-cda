@@ -23,20 +23,20 @@ public class CommentRestController {
     //////////////// Endpoints ////////////////
 
     @PostMapping("/post/publication/comment")
-    public ResponseEntity<CommentPublication> postPublicationComment(@RequestBody CommentCreateDto dto) {
-        CommentPublication comment = commentService.createPublicationComment(dto);
+    public ResponseEntity<CommentGetDto> postPublicationComment(@RequestBody CommentCreateDto dto) {
+        CommentGetDto comment = commentService.createPublicationComment(dto);
         return ResponseEntity.ok(comment);
     }
 
     @PostMapping("/post/event/comment")
-    public ResponseEntity<CommentEvent> postEventComment(@RequestBody CommentCreateDto dto) {
-        CommentEvent comment = commentService.createEventComment(dto);
+    public ResponseEntity<CommentGetDto> postEventComment(@RequestBody CommentCreateDto dto) {
+        CommentGetDto comment = commentService.createEventComment(dto);
         return ResponseEntity.ok(comment);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<CommentPublication> updateComment(@RequestBody CommentUpdateDto dto) {
-        CommentPublication comment = commentService.update(dto);
+    public ResponseEntity<CommentGetDto> updateComment(@RequestBody CommentUpdateDto dto) {
+        CommentGetDto comment = commentService.update(dto);
         return ResponseEntity.ok(comment);
     }
 
