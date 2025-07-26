@@ -160,7 +160,8 @@ public class ProfileServiceImpl implements ProfileService {
                 subscriber.getStreet(),
                 subscriber.getIsInCity(),
                 subscriber.getBirthdate(),
-                subscriber.getPhone()
+                subscriber.getPhone(),
+                subscriber.getPicture()
         );
     }
 

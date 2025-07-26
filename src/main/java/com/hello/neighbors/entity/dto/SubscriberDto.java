@@ -17,6 +17,7 @@ public class SubscriberDto {
     private boolean isInCity;
     private LocalDate birthdate;
     private String phone;
+    private String picture;
 
     ///////////// Constructors ////////////////////
 
@@ -25,7 +26,7 @@ public class SubscriberDto {
 
     public SubscriberDto(Long id, String firstname, String lastname, String pseudonym, String email,
                          double latitude, double longitude, String city, String postalCode, String street,
-                         boolean isInCity, LocalDate birthdate, String phone) {
+                         boolean isInCity, LocalDate birthdate, String phone, String picture) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -39,6 +40,7 @@ public class SubscriberDto {
         this.isInCity = isInCity;
         this.birthdate = birthdate;
         this.phone = phone;
+        this.picture = picture;
     }
 
     ///////////// Getters & Setters////////////////////
@@ -82,6 +84,9 @@ public class SubscriberDto {
     public String getPhone() {
         return phone;
     }
+    public String getPicture() {
+        return picture;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -121,5 +126,8 @@ public class SubscriberDto {
     }
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

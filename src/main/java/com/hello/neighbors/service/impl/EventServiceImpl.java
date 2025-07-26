@@ -226,6 +226,7 @@ public class EventServiceImpl implements EventService {
         dto.setEndDate(ev.getEndDate());
         dto.setDescription(ev.getDescription());
         dto.setIllustrations(ev.getIllustrations());
+        dto.setLikes(ev.getLikes());
         dto.setCreationDate(ev.getCreationDate());
         dto.setParticipants(participants);
 
