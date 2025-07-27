@@ -3,6 +3,8 @@ package com.hello.neighbors.service;
 import com.hello.neighbors.entity.dto.AuthenticationDto;
 import com.hello.neighbors.entity.dto.RegistrationDto;
 import com.hello.neighbors.entity.dto.UserDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface SecurityService {
