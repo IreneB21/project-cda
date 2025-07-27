@@ -73,10 +73,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         existingUser.setIsInCity(dto.isInCity());
         existingUser.setBirthdate(dto.getBirthdate());
-        existingUser.setIntroduction(dto.getIntroduction());
         existingUser.setPhone(dto.getPhone());
-        existingUser.setPicture(dto.getPicture());
-        existingUser.setNotificationPreferences(dto.getNotificationPreferences());
 
         userRepository.save(existingUser);
 
@@ -161,7 +158,8 @@ public class ProfileServiceImpl implements ProfileService {
                 subscriber.getIsInCity(),
                 subscriber.getBirthdate(),
                 subscriber.getPhone(),
-                subscriber.getPicture()
+                subscriber.getPicture(),
+                subscriber.getRegistrationDate()
         );
     }
 

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class ProfileUpdateDto {
 
-    private Long UserId;
+    private Long userId;
     private String lastname;
     private String firstname;
     private String pseudonym;
@@ -15,15 +15,13 @@ public class ProfileUpdateDto {
     private String street;
     private boolean isInCity;
     private LocalDate birthdate;
-    private String introduction;
     private String phone;
-    private String picture;
-    private int notificationPreferences;
+    //private int notificationPreferences;
 
     ///////////////// Getters and Setters ////////////////////
 
     public Long getUserId() {
-        return UserId;
+        return userId;
     }
     public String getLastname() {
         return lastname;
@@ -55,21 +53,12 @@ public class ProfileUpdateDto {
     public LocalDate getBirthdate() {
         return birthdate;
     }
-    public String getIntroduction() {
-        return introduction;
-    }
     public String getPhone() {
         return phone;
     }
-    public String getPicture() {
-        return picture;
-    }
-    public int getNotificationPreferences() {
-        return notificationPreferences;
-    }
 
     public void setUserId(Long userId) {
-        UserId = userId;
+        this.userId = userId;
     }
     public void setLastname(String lastname) {
         this.lastname = lastname;
@@ -101,16 +90,7 @@ public class ProfileUpdateDto {
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
-    }
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-    public void setNotificationPreferences(int notificationPreferences) {
-        this.notificationPreferences = notificationPreferences;
     }
 }

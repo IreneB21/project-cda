@@ -18,6 +18,7 @@ public class SubscriberDto {
     private LocalDate birthdate;
     private String phone;
     private String picture;
+    private LocalDate registrationDate;
 
     ///////////// Constructors ////////////////////
 
@@ -26,7 +27,7 @@ public class SubscriberDto {
 
     public SubscriberDto(Long id, String firstname, String lastname, String pseudonym, String email,
                          double latitude, double longitude, String city, String postalCode, String street,
-                         boolean isInCity, LocalDate birthdate, String phone, String picture) {
+                         boolean isInCity, LocalDate birthdate, String phone, String picture, LocalDate registrationDate) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -41,6 +42,7 @@ public class SubscriberDto {
         this.birthdate = birthdate;
         this.phone = phone;
         this.picture = picture;
+        this.registrationDate = registrationDate;
     }
 
     ///////////// Getters & Setters////////////////////
@@ -75,7 +77,7 @@ public class SubscriberDto {
     public String getStreet() {
         return street;
     }
-    public boolean isInCity() {
+    public boolean getIsInCity() {
         return isInCity;
     }
     public LocalDate getBirthdate() {
@@ -86,6 +88,9 @@ public class SubscriberDto {
     }
     public String getPicture() {
         return picture;
+    }
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
     }
 
     public void setId(Long id) {
@@ -118,7 +123,7 @@ public class SubscriberDto {
     public void setStreet(String street) {
         this.street = street;
     }
-    public void setInCity(boolean inCity) {
+    public void setIsInCity(boolean inCity) {
         isInCity = inCity;
     }
     public void setBirthdate(LocalDate birthdate) {
@@ -129,5 +134,8 @@ public class SubscriberDto {
     }
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
     }
 }
