@@ -159,7 +159,8 @@ public class ProfileServiceImpl implements ProfileService {
                 subscriber.getBirthdate(),
                 subscriber.getPhone(),
                 subscriber.getPicture(),
-                subscriber.getRegistrationDate()
+                subscriber.getRegistrationDate(),
+                subscriber.getIntroduction()
         );
     }
 

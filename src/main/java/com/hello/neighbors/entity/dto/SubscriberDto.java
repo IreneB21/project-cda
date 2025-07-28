@@ -19,6 +19,7 @@ public class SubscriberDto {
     private String phone;
     private String picture;
     private LocalDate registrationDate;
+    private String introduction;
 
     ///////////// Constructors ////////////////////
 
@@ -27,7 +28,7 @@ public class SubscriberDto {
 
     public SubscriberDto(Long id, String firstname, String lastname, String pseudonym, String email,
                          double latitude, double longitude, String city, String postalCode, String street,
-                         boolean isInCity, LocalDate birthdate, String phone, String picture, LocalDate registrationDate) {
+                         boolean isInCity, LocalDate birthdate, String phone, String picture, LocalDate registrationDate, String introduction) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -43,6 +44,7 @@ public class SubscriberDto {
         this.phone = phone;
         this.picture = picture;
         this.registrationDate = registrationDate;
+        this.introduction = introduction;
     }
 
     ///////////// Getters & Setters////////////////////
@@ -92,6 +94,7 @@ public class SubscriberDto {
     public LocalDate getRegistrationDate() {
         return registrationDate;
     }
+    public String getIntroduction() { return introduction; }
 
     public void setId(Long id) {
         this.id = id;
@@ -138,4 +141,5 @@ public class SubscriberDto {
     public void setRegistrationDate(LocalDate registrationDate) {
         this.registrationDate = registrationDate;
     }
+    public void setIntroduction(String introduction) { this.introduction = introduction; }
 }
