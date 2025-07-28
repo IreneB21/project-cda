@@ -84,7 +84,7 @@ public class ProfileUpdateDto {
     public void setStreet(String street) {
         this.street = street;
     }
-    public void setInCity(boolean inCity) {
+    public void setIsInCity(boolean inCity) {
         isInCity = inCity;
     }
     public void setBirthdate(LocalDate birthdate) {
