@@ -35,8 +35,6 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventGetDto create(EventCreateDto dto) {
-        Subscriber author = new Subscriber();
-        author.setId(dto.getAuthorId());
         Event event = new Event();
 
         event.setTitle(dto.getTitle());
@@ -59,7 +57,6 @@ public class EventServiceImpl implements EventService {
         event.setDescription(dto.getDescription());
         event.setCreationDate(LocalDateTime.now());
         event.setIllustrations(dto.getIllustrations());
-        event.setAuthor(author);
 
         List<EventParticipantDto> participants = event.getParticipants().stream()
                 .map(sub -> new EventParticipantDto(
@@ -69,6 +66,11 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
 
         eventRepository.save(event);
+
+        Subscriber author = (Subscriber) userRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        event.setAuthor(author);
 
         EventGetDto newEvent = this.mapToDto(event, participants);
 

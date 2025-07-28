@@ -4,6 +4,7 @@ import com.hello.neighbors.entity.*;
 import com.hello.neighbors.entity.dto.*;
 import com.hello.neighbors.repository.CommentEventRepository;
 import com.hello.neighbors.repository.CommentPublicationRepository;
+import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
 
     private CommentPublicationRepository commentPublicationRepository;
     private CommentEventRepository commentEventRepository;
+    private UserRepository userRepository;
 
     @Override
     @Transactional
@@ -36,8 +38,6 @@ public class CommentServiceImpl implements CommentService {
             throw new IllegalArgumentException("Un commentaire ne peut pas être rattaché à la fois à une publication et à un autre commentaire.");
         }
 
-        Subscriber author = new Subscriber();
-        author.setId(dto.getAuthorId());
         Publication publication = null;
         if (dto.getParentId() != null) {
             publication = new Publication();
@@ -48,6 +48,9 @@ public class CommentServiceImpl implements CommentService {
             parentComment = new CommentPublication();
             parentComment.setId(dto.getParentCommentId());
         }
+
+        Subscriber author = (Subscriber) userRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         CommentPublication comment = new CommentPublication(
                 dto.getBody(),
@@ -73,8 +76,6 @@ public class CommentServiceImpl implements CommentService {
             throw new IllegalArgumentException("Un commentaire ne peut pas être rattaché à la fois à une publication et à un autre commentaire.");
         }
 
-        Subscriber author = new Subscriber();
-        author.setId(dto.getAuthorId());
         Event event = null;
         if (dto.getParentId() != null) {
             event = new Event();
@@ -85,6 +86,9 @@ public class CommentServiceImpl implements CommentService {
             parentComment = new CommentEvent();
             parentComment.setId(dto.getParentCommentId());
         }
+
+        Subscriber author = (Subscriber) userRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         CommentEvent comment = new CommentEvent(
                 dto.getBody(),
@@ -207,5 +211,9 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     public void setCommentEventRepository(CommentEventRepository commentEventRepository) {
         this.commentEventRepository = commentEventRepository;
+    }
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }

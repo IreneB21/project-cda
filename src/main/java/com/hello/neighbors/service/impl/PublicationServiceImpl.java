@@ -6,6 +6,7 @@ import com.hello.neighbors.entity.Subscriber;
 import com.hello.neighbors.entity.dto.*;
 import com.hello.neighbors.repository.CommentPublicationRepository;
 import com.hello.neighbors.repository.PublicationRepository;
+import com.hello.neighbors.repository.UserRepository;
 import com.hello.neighbors.service.GeocodingService;
 import com.hello.neighbors.service.PublicationService;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,12 +30,11 @@ public class PublicationServiceImpl implements PublicationService {
     private CommentPublicationRepository commentPublicationRepository;
     private GeocodingService geocodingService;
     private CommentServiceImpl commentService;
+    private UserRepository userRepository;
 
     @Override
     @Transactional
     public PublicationGetDto create(PublicationCreateDto dto) {
-        Subscriber author = new Subscriber();
-        author.setId(dto.getAuthorId());
         Publication publication = new Publication();
 
         publication.setTitle(dto.getTitle());
@@ -57,11 +57,14 @@ public class PublicationServiceImpl implements PublicationService {
         publication.setPublicationDate(LocalDateTime.now());
         publication.setArchived(false);
         publication.setReported(false);
-        publication.setAuthor(author);
         publication.setCategory(dto.getCategory());
-
         //author.setPublications(publication);
         publicationRepository.save(publication);
+
+        Subscriber author = (Subscriber) userRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        publication.setAuthor(author);
 
         PublicationGetDto newPublication = this.mapToDto(publication);
 
@@ -201,5 +204,9 @@ public class PublicationServiceImpl implements PublicationService {
     @Autowired
     public void setCommentService(CommentServiceImpl commentService) {
         this.commentService = commentService;
+    }
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }
